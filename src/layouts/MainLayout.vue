@@ -5,8 +5,8 @@
     </div>
 </template>
 <script lang="ts" setup>
-import NavbarMain from '@/components/NavbarMain.vue';
+import NavbarMain from '@/components/layout/NavbarMain.vue';
 </script>
 <style lang="">
-    
+
 </style>
