@@ -11,3 +11,7 @@ export interface User {
   birthday: string,
   createdAt: string,
 }
+
+export type UserWithPassword = User & {
+  password: string
+}

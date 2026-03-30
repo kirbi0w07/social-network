@@ -8,8 +8,9 @@
     <div class="flex justify-center items-center">
       <Icon icon="heroicons:photo" width="24" color="#374151" />
     </div>
-
   </article>
+
+  <!-- FORMULARIO CRAR POST -->
   <transition name="whatsonmind">
     <form v-if="showWhatsOnMindForm" class="flex flex-col top-0 fixed w-full h-screen bg-white">
       <div class="grid gap-2 grid-cols-3 items-center justify-between  px-2 pt-4 pb-1 border-b border-slate-300">
@@ -62,10 +63,11 @@ const onFocusTextarea = (e: FocusEvent) => {
   }
 }
 
-const onBlurTextarea = () => {
-  hideHeader.value = false
-}
+// const onBlurTextarea = () => {
+//   hideHeader.value = false
+// }
 </script>
+
 <style scoped>
 .whatsonmind-enter-active,
 .whatsonmind-leave-active {
