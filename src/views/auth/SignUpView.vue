@@ -1,39 +1,157 @@
 <template lang="">
-  <form class='flex flex-col gap-3'>
-    <h2 class='text-center font-bold text-xl text-slate-900'>Sign Up</h2>
-    <label for="name" class='px-2 text-sm font-bold w-fit'>Full name</label>
-    <input type='name' label='Name' name='name' id='name' v-model="signUpData.name" class='rounded-md bg-slate-100 p-2 outline-0'>
-    <label for="email" class='px-2 text-sm font-bold w-fit'>Email</label>
-    <input type='email' v-model="signUpData.email" label='Email' name='email' id='email' class='rounded-md bg-slate-100 p-2 outline-0'>
-    <label for="password" class='px-2 text-sm font-bold w-fit'>Password</label>
-    <input type='password' v-model="signUpData.password" label='Password' name='password' id='password' class='rounded-md bg-slate-100 p-2 outline-0'>
-    <label for="confirm-password" class='px-2 text-sm font-bold w-fit'>Confirm password</label>
-    <input type='password' label='confirm-Password' v-model="signUpData.confirmPassword" name='confirm-password' id='confirm-password' class='rounded-md bg-slate-100 p-2 outline-0'>
+  <h2 class='mb-4 text-center font-bold text-xl text-slate-900'>Sign Up</h2>
 
-    <p class='text-center'>have an account? <small class='text-blue-700'><router-link to='/auth/sign-in'>Sign In</router-link></small></p>
-    <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='signUp'>Sign Up</button>
+  <form>
+    <!-- STEP 1 -->
+    <div class='flex flex-col gap-3' v-if="step === 1">
+      <pre>{{errorsSignUpData}}</pre>
+      <small>Welcome to the form for create an account. To start a create your account please write your<span class="font-bold"> real name.</span></small>
+      <h3 class="font-bold">What's your name?</h3>
+      <div class="flex flex-col">
+        <label for="name" class='px-2 text-sm font-bold w-fit'>Name</label>
+      <input type='text' placeholder='Name' name='name' id='name' v-model="signUpData.name" class='rounded-md bg-slate-100 p-2 outline-0'>
+      </div>
+      <div class="flex flex-col">
+        <label for="last-name" class='px-2 text-sm font-bold w-fit'>Last name</label>
+        <input type='text' placeholder='Last name' name='last-name' id='last-name' v-model="signUpData.last_name" class='rounded-md bg-slate-100 p-2 outline-0'>
+      </div>
+      <p class='text-center'>have an account? <small class='text-blue-700'><router-link to='/auth/sign-in'>Sign In</router-link></small></p>
+      <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class='flex flex-col gap-3' v-if="step === 2">
+      <h3 class="font-bold">When were you born?</h3>
+      <small>you can change the privacity of your birthday later.</small>
+      <div class="flex flex-col">
+        <label class='px-2 text-sm font-bold w-fit'>Day</label>
+        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model="signUpData.birthDate.day">
+          <option v-for="d in 31" :key="d" :value="d">{{d}}</option>
+        </select> 
+      </div>
+      <div class="flex flex-col">
+        <label class='px-2 text-sm font-bold w-fit'>Month</label>
+        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model="signUpData.birthDate.month">
+          <option v-for="d in months" :key="d" :value="d">{{d}}</option>
+        </select> 
+      </div>
+      <div class="flex flex-col">
+        <label class='px-2 text-sm font-bold w-fit'>Year</label>
+        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model="signUpData.birthDate.year">
+          <option v-for="y in 100" :key="y" :value="currentYear - y">
+            {{ currentYear - y }}
+          </option>
+        </select>
+
+      </div>
+      <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class='flex flex-col gap-3' v-if="step === 3">
+      <h3 class="font-bold">Which genre do you identify with?</h3>
+      <small>You can change who can see your gender on your profile later.</small>
+      <div class="flex gap-2">
+        <input  type="radio" id="man" name="gender" value="man" v-model="signUpData.gender"/>
+        <label class="font-medium" for="man">Man</label>
+      </div>
+      <div class="flex gap-2">
+        <input type="radio" id="woman" name="gender" value="woman" v-model="signUpData.gender"/>
+        <label class="font-medium" for="woman">Woman</label>
+      </div>
+      <div class="flex gap-2">
+        <input type="radio" id="other" name="gender" value="other" v-model="signUpData.gender"/>
+        <label class="font-medium" for="other">Other</label>
+      </div>
+      <div class="flex gap-2">
+        <input type="radio" id="I’d rather not say" name="gender" value="I’d_rather_not_say" v-model="signUpData.gender"/>
+        <label class="font-medium" for="I’d rather not say">I’d rather not say</label>
+      </div>
+      <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class='flex flex-col gap-3' v-if="step === 4">
+      <h3 class="font-bold">What's your email adress?</h3>
+      <small>Enter an email address to verify your account. It will not appear on your profile.</small>
+      <div class="flex flex-col">
+        <label for="email" class='px-2 text-sm font-bold w-fit'>Email</label>
+      <input type='email' placeholder='Email' name='email' id='email' v-model="signUpData.email" class='rounded-md bg-slate-100 p-2 outline-0'>
+      </div>
+      <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class='flex flex-col gap-3' v-if="step === 5">
+      <h3 class="font-bold">Chose a secure password</h3>
+      
+      <div class="flex flex-col">
+        <label for="password" class='px-2 text-sm font-bold w-fit'>Password</label>
+        <input type='password' v-model="signUpData.password" placeholder='Password' name='password' id='password' class='rounded-md bg-slate-100 p-2 outline-0'>
+      </div>
+      <div class="flex flex-col">
+        <label for="confirm_password" class='px-2 text-sm font-bold w-fit'>Confirm password</label>
+        <input type='password' v-model="signUpData.confirm_password" placeholder='Confirm password' name='confirm_password' id='confirm_password' class='rounded-md bg-slate-100 p-2 outline-0'>
+      </div>
+          <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='signUp'>Create account</button> 
+    </div>
+
   </form>
+
 </template>
 <script setup lang="ts">
+import {type ErrorsSignupData, type SignupData } from '@/types/signup';
 import { ref } from 'vue';
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'Nobember', 'December']
+const currentYear = new Date().getFullYear()
+const step = ref(1)
 
-
-const signUpData = ref({
+const signUpData = ref<SignupData>({
   name: '',
+  last_name: '',
   email: '',
   password: '',
-  confirmPassword: ''
+  confirm_password: '',
+  birthDate: {
+    day: '',
+    month: '',
+    year: '',
+  },
+  gender: '',
 })
 
-const validateSignUpData = (()=> {
-  if(Object.values(signUpData.value).some(value => !value)) {
+const errorsSignUpData = ref<ErrorsSignupData>({})
+
+const validateStep = (() => {
+  errorsSignUpData.value = {}
+  if(step.value === 1) {
+    
+    const {name, last_name} = signUpData.value
+    if(!name){
+      errorsSignUpData.value.name = 'Name is required'
+      return false
+    }
+    if(!last_name){
+      errorsSignUpData.value.last_name = 'Last name is required'
+      return false
+    }
+  }
+}) 
+
+const nextStep = (() => {
+    if(!validateStep())return
+  step.value++
+})
+
+const validateSignUpData = (() => {
+  if (Object.values(signUpData.value).some(value => !value)) {
     return
   }
   console.log('si paso')
 })
- const signUp = (() => {
+const signUp = (() => {
   validateSignUpData()
- })
+})
 </script>
 <style lang="">
 
