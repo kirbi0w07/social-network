@@ -5,9 +5,9 @@ export interface SignupData {
     password: string,
     confirm_password: string,
     birthDate: {
-        day: string,
-        month: string,
-        year: string,
+        day: number | null,
+        month: number | null,
+        year: number | null,
     },
     gender: string,
 }

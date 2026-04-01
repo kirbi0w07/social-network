@@ -18,25 +18,25 @@
       <small>you can change the privacity of your birthday later.</small>
       <div class="flex flex-col">
         <label class='px-2 text-sm font-bold w-fit'>Day</label>
-        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model="signUpData.birthDate.day">
+        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model.number="signUpData.birthDate.day">
           <option v-for="d in 31" :key="d" :value="d">{{d}}</option>
         </select>
       </div>
       <div class="flex flex-col">
         <label class='px-2 text-sm font-bold w-fit'>Month</label>
         <select class='rounded-md bg-slate-100 p-2 outline-0' v-model="signUpData.birthDate.month">
-          <option v-for="d in months" :key="d" :value="d">{{d}}</option>
+          <option v-for="m in months" :key="m.value" :value="m.value">{{m.name}}</option>
         </select>
       </div>
       <div class="flex flex-col">
         <label class='px-2 text-sm font-bold w-fit'>Year</label>
-        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model="signUpData.birthDate.year">
+        <select class='rounded-md bg-slate-100 p-2 outline-0' v-model.number="signUpData.birthDate.year">
           <option v-for="y in 100" :key="y" :value="currentYear - y">
             {{ currentYear - y }}
           </option>
         </select>
-
       </div>
+      <p v-if="errorsSignUpData.birthDate" class="text-red-600 px-2 py-1">{{errorsSignUpData.birthDate}}</p>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
@@ -60,6 +60,7 @@
         <input type="radio" id="I’d rather not say" name="gender" value="I’d_rather_not_say" v-model="signUpData.gender"/>
         <label class="font-medium" for="I’d rather not say">I’d rather not say</label>
       </div>
+      <p v-if="errorsSignUpData.gender" class="text-red-600 px-2 py-1">{{errorsSignUpData.gender}}</p>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
@@ -93,7 +94,20 @@
 import {type ErrorsSignupData, type SignupData } from '@/types/signup';
 import { ref } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'Nobember', 'December']
+const months = [
+  { name: 'January', value: 1 },
+  { name: 'February', value: 2 },
+  { name: 'March', value: 3 },
+  { name: 'April', value: 4 },
+  { name: 'May', value: 5 },
+  { name: 'June', value: 6 },
+  { name: 'July', value: 7 },
+  { name: 'August', value: 8 },
+  { name: 'September', value: 9 },
+  { name: 'October', value: 10 },
+  { name: 'November', value: 11 },
+  { name: 'December', value: 12 },
+]
 const currentYear = new Date().getFullYear()
 const step = ref(1)
 
@@ -104,9 +118,9 @@ const signUpData = ref<SignupData>({
   password: '',
   confirm_password: '',
   birthDate: {
-    day: '',
-    month: '',
-    year: '',
+    day: null,
+    month: null,
+    year: null,
   },
   gender: '',
 })
@@ -124,6 +138,34 @@ const validateStep = (() => {
     }
     if(!last_name){
       errorsSignUpData.value.last_name = 'Last name is required'
+      return false
+    }
+  }
+
+  if(step.value === 2) {
+    const {day, month, year} = signUpData.value.birthDate
+  if (!day || !month || !year) {
+    errorsSignUpData.value.birthDate = 'Select your birthday date'
+    return false
+  }
+    const date = new Date(year, month -1, day)
+
+    const isValid =
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+    
+  if (!isValid) {
+    errorsSignUpData.value.birthDate = 'Invalid date'
+    return false
+  }
+  }
+
+  if(step.value === 3) {
+
+    const {gender} = signUpData.value
+    if(!gender){
+      errorsSignUpData.value.gender = 'Gender is required'
       return false
     }
   }
