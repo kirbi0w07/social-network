@@ -1,12 +1,17 @@
 <template lang="">
+  <div class="pb-10">
+    <button @click="previousStep" :disabled="step <= 1" class="w-fit px-2 py-1 rounded-md bg-slate-900 disabled:bg-slate-400">
+      <Icon icon="heroicons:arrow-left-16-solid" width="24" color="#fff" />
+    </button>
+  </div>
   <h2 class='mb-4 text-center font-bold text-xl text-slate-900'>Sign Up</h2>
   <form>
     <!-- STEP 1 -->
     <div class='flex flex-col gap-3' v-if="step === 1">
       <small>Welcome to the form for create an account. To start a create your account please write your<span class="font-bold"> real name.</span></small>
       <h3 class="font-bold">What's your name?</h3>
-      <BaseInput label='Name' v-model="signUpData.name" id='name' name='name' placeholder='Name' :error='errorsSignUpData.name'/>
-      <BaseInput label='Last Name' v-model="signUpData.last_name" id='last_name' name='lastName' placeholder='Last Name' :error='errorsSignUpData.last_name'/>
+      <BaseInput label='Name' v-model="signUpData.name" id='name' name='name' placeholder='Ex. John' :error='errorsSignUpData.name'/>
+      <BaseInput label='Last Name' v-model="signUpData.last_name" id='last_name' name='lastName' placeholder='Ex. wick' :error='errorsSignUpData.last_name'/>
 
       <p class='text-center'>have an account? <small class='text-blue-700'><router-link to='/auth/sign-in'>Sign In</router-link></small></p>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
@@ -68,7 +73,7 @@
     <div class='flex flex-col gap-3' v-if="step === 4">
       <h3 class="font-bold">What's your email adress?</h3>
       <small>Enter an email address to verify your account. It will not appear on your profile.</small>
-      <BaseInput id='email' type='email' name='email' label='Email' placeholder='Email'/>
+      <BaseInput id='email' type='email' name='email' label='Email' placeholder='Ex. user@mail.com' v-model="signUpData.email" :error="errorsSignUpData.email"/>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
@@ -76,10 +81,7 @@
     <div class='flex flex-col gap-3' v-if="step === 5">
       <h3 class="font-bold">Chose a secure password</h3>
 
-      <div class="flex flex-col">
-        <label for="password" class='px-2 text-sm font-bold w-fit'>Password</label>
-        <input type='password' v-model="signUpData.password" placeholder='Password' name='password' id='password' class='rounded-md bg-slate-100 p-2 outline-0'>
-      </div>
+      <BaseInput id='password' type='password' name='Password' label='Password' placeholder='Password' v-model="signUpData.password" :error="errorsSignUpData.password"/>
       <div class="flex flex-col">
         <label for="confirm_password" class='px-2 text-sm font-bold w-fit'>Confirm password</label>
         <input type='password' v-model="signUpData.confirm_password" placeholder='Confirm password' name='confirm_password' id='confirm_password' class='rounded-md bg-slate-100 p-2 outline-0'>
@@ -94,6 +96,7 @@
 import {type ErrorsSignupData, type SignupData } from '@/types/signup';
 import { ref } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
+import { Icon } from '@iconify/vue';
 const months = [
   { name: 'January', value: 1 },
   { name: 'February', value: 2 },
@@ -154,7 +157,7 @@ const validateStep = (() => {
     date.getFullYear() === year &&
     date.getMonth() === month - 1 &&
     date.getDate() === day
-    
+
   if (!isValid) {
     errorsSignUpData.value.birthDate = 'Invalid date'
     return false
@@ -169,6 +172,20 @@ const validateStep = (() => {
       return false
     }
   }
+
+  if(step.value === 4) {
+    const {email} = signUpData.value
+    if (!email) {
+      errorsSignUpData.value.email = "Email is required"
+      return false
+    }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+      if(!emailRegex.test(email)) {
+        errorsSignUpData.value.email = "Invalid email format. Please use only letters, numbers, dots, and hyphens."
+        return false
+      }
+  }
   return true
 })
 
@@ -177,14 +194,40 @@ const nextStep = (() => {
   step.value++
 })
 
-const validateSignUpData = (() => {
-  if (Object.values(signUpData.value).some(value => !value)) {
-    return
-  }
-  console.log('si paso')
+const previousStep = (() => {
+  step.value--
 })
+
+const validatePassword = (()=> {
+    const {password, confirm_password} = signUpData.value
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/
+    if(!password) {
+      errorsSignUpData.value.password = "Invalid password"
+      return false
+    }
+    if(!confirm_password) {
+      errorsSignUpData.value.password = "Invalid password"
+      return false
+    }
+    if(!passwordRegex.test(password)) {
+      errorsSignUpData.value.password = "The password must contain at least one uppercase letter and one special character."
+      return false
+    }
+    if(password !== confirm_password) {
+      errorsSignUpData.value.password = "Invalid password not match"
+      return false
+    }
+    return true
+})
+
+// const validateSignUpData = (() => {
+//   if (Object.values(signUpData.value).some(value => !value)) {
+//     return
+//   }
+// })
 const signUp = (() => {
-  validateSignUpData()
+  if(!validatePassword()) return
+  console.log('account created')
 })
 </script>
 <style lang="">
