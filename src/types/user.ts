@@ -1,15 +1,16 @@
 export interface User {
   id: string,
-  username: string,
+  username?: string,
   name: string,
+  last_name: string,
   email: string,
-  avatar: string,
+  avatar?: string,
   bio?: string,
-  followers: number,
-  following: number,
-  posts: number,
-  birthday: string,
-  createdAt: string,
+  followers_count: number,
+  following_count: number,
+  birthday: Date,
+  gender: string,
+  createdAt: Date,
 }
 
 export type UserWithPassword = User & {

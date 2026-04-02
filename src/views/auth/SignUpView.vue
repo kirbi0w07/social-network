@@ -10,8 +10,8 @@
     <div class='flex flex-col gap-3' v-if="step === 1">
       <small>Welcome to the form for create an account. To start a create your account please write your<span class="font-bold"> real name.</span></small>
       <h3 class="font-bold">What's your name?</h3>
-      <BaseInput label='Name' v-model="signUpData.name" id='name' name='name' placeholder='Ex. John' :error='errorsSignUpData.name'/>
-      <BaseInput label='Last Name' v-model="signUpData.last_name" id='last_name' name='lastName' placeholder='Ex. wick' :error='errorsSignUpData.last_name'/>
+      <BaseInput label='Name' v-model="signUpData.name" id='name' name='name' placeholder='E.g. John' :error='errorsSignUpData.name'/>
+      <BaseInput label='Last Name' v-model="signUpData.last_name" id='last_name' name='lastName' placeholder='E.g. wick' :error='errorsSignUpData.last_name'/>
 
       <p class='text-center'>have an account? <small class='text-blue-700'><router-link to='/auth/sign-in'>Sign In</router-link></small></p>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
@@ -73,7 +73,7 @@
     <div class='flex flex-col gap-3' v-if="step === 4">
       <h3 class="font-bold">What's your email adress?</h3>
       <small>Enter an email address to verify your account. It will not appear on your profile.</small>
-      <BaseInput id='email' type='email' name='email' label='Email' placeholder='Ex. user@mail.com' v-model="signUpData.email" :error="errorsSignUpData.email"/>
+      <BaseInput id='email' type='email' name='email' label='Email' placeholder='E.g. user@mail.com' v-model="signUpData.email" :error="errorsSignUpData.email"/>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
@@ -97,6 +97,9 @@ import {type ErrorsSignupData, type SignupData } from '@/types/signup';
 import { ref } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import { Icon } from '@iconify/vue';
+import { type User, type UserWithPassword } from '@/types/user';
+import bcrypt from 'bcryptjs'
+
 const months = [
   { name: 'January', value: 1 },
   { name: 'February', value: 2 },
@@ -220,14 +223,35 @@ const validatePassword = (()=> {
     return true
 })
 
+
 // const validateSignUpData = (() => {
 //   if (Object.values(signUpData.value).some(value => !value)) {
 //     return
 //   }
 // })
-const signUp = (() => {
+
+const createUserFromSignup = (async (): Promise<UserWithPassword> => {
+  const data = signUpData.value
+  const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
+  const hashedPassword = await bcrypt.hash(data.password, 10)
+  return {
+    id: self.crypto.randomUUID(),
+    name: data.name,
+    last_name: data.last_name,
+    email: data.email,
+    password: hashedPassword,
+    followers_count: 0,
+    following_count: 0,
+    birthday: birthDate,
+    gender: data.gender,
+    createdAt: new Date(),
+
+  }
+})
+const signUp = (async () => {
   if(!validatePassword()) return
-  console.log('account created')
+  const newUser: User = await createUserFromSignup()
+  console.log('newUser', newUser)
 })
 </script>
 <style lang="">
