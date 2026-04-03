@@ -251,7 +251,7 @@ const createUserFromSignup = (async (): Promise<UserWithPassword> => {
 const signUp = (async () => {
   if(!validatePassword()) return
   const newUser: User = await createUserFromSignup()
-  console.log('newUser', newUser)
+  
 })
 </script>
 <style lang="">
