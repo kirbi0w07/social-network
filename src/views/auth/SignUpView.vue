@@ -93,13 +93,14 @@
 
 </template>
 <script setup lang="ts">
-import {type ErrorsSignupData, type SignupData } from '@/types/signup';
+import {type ErrorsSignupData, type SignupCredentials, type SignupData } from '@/types/signup';
 import { ref } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import { Icon } from '@iconify/vue';
-import { type User, type UserWithPassword } from '@/types/user';
-import bcrypt from 'bcryptjs'
+import { useAuthStore } from '@/stores/auth';
+import type { createProfileData } from '@/types/profile';
 
+const authStore = useAuthStore()
 const months = [
   { name: 'January', value: 1 },
   { name: 'February', value: 2 },
@@ -230,28 +231,36 @@ const validatePassword = (()=> {
 //   }
 // })
 
-const createUserFromSignup = (async (): Promise<UserWithPassword> => {
+const createUserFromSignup = ((): SignupCredentials => {
   const data = signUpData.value
-  const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
-  const hashedPassword = await bcrypt.hash(data.password, 10)
+  // const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
   return {
-    id: self.crypto.randomUUID(),
     name: data.name,
     last_name: data.last_name,
     email: data.email,
-    password: hashedPassword,
-    followers_count: 0,
-    following_count: 0,
+    password: data.password,
+    password_confirmation: data.confirm_password
+}
+})
+const createProfileFromSignup = ((): createProfileData => {
+  const data = signUpData.value
+   const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
+  return {
     birthday: birthDate,
     gender: data.gender,
-    createdAt: new Date(),
-
-  }
+}
 })
 const signUp = (async () => {
+  try {
   if(!validatePassword()) return
-  const newUser: User = await createUserFromSignup()
-  
+  const signupCredentials: SignupCredentials  = createUserFromSignup()
+  await authStore.registerUser(signupCredentials)
+  const profileData = createProfileFromSignup()
+  await authStore.storeProfile(profileData)
+  } catch (error) {
+    console.log(error)
+  }
+
 })
 </script>
 <style lang="">

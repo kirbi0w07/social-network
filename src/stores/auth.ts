@@ -4,7 +4,9 @@ import { computed, ref } from "vue";
 import { mockUsers } from "@/data/users";
 import { loginService, registerService } from "@/services/AuthService";
 import type { SigninData } from "@/types/signin";
-import type { SignupData } from "@/types/signup";
+import type { SignupCredentials } from "@/types/signup";
+import type { createProfileData } from "@/types/profile";
+import { createProfileService } from "@/services/ProfileService";
 
 export const useAuthStore = defineStore('auth', () => {
 const user = ref<User | null>(null)
@@ -12,13 +14,21 @@ const authenticated = ref(false)
 
 const isAuthenticated = computed(() => authenticated.value)
 const currentUser = computed(() => user.value)
-const login = async (credentials: SigninData) => {
+const loginUser = async (credentials: SignupCredentials) => {
   const user = await loginService(credentials);
   console.log('user logged?', user)
 }
-const register = async (credentials: SignupData) => {
+const registerUser = async (credentials: SignupCredentials) => {
   const user = await registerService(credentials);
-  console.log('user register?', user)
+
+}
+
+const storeProfile = async (profileData: createProfileData) => {
+  try {
+    await createProfileService(profileData);
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const logout = () => {
@@ -29,8 +39,9 @@ const logout = () => {
 return {
   currentUser,
   isAuthenticated,
-  login,
-  register,
+  loginUser,
+  registerUser,
+  storeProfile,
   logout
 }
 })

@@ -20,3 +20,11 @@ export interface ErrorsSignupData {
     birthDate?: string
     gender?: string,
 }
+
+export interface SignupCredentials {
+  email: string,
+  name: string,
+  last_name: string,
+  password: string,
+  password_confirmation: string
+}
