@@ -19,8 +19,9 @@ const loginUser = async (credentials: SignupCredentials) => {
   console.log('user logged?', user)
 }
 const registerUser = async (credentials: SignupCredentials) => {
-  const user = await registerService(credentials);
-
+  const {data} = await registerService(credentials);
+  console.log(data.access_token)
+  localStorage.setItem('social-network-token', data.access_token)
 }
 
 const storeProfile = async (profileData: createProfileData) => {

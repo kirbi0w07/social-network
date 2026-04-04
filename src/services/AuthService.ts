@@ -20,14 +20,13 @@ export const loginService = async (loginData: SigninData) => {
 export const registerService = async (registerData: SignupCredentials) => {
     try {
       await ensureCsrf()
-      const response = await axios.post('/register', registerData)
-      console.log(response)
-      if (response.data?.errors || response.data?.message) {
-        throw new Error(
-          response.data.message || 'Error registrando usuario'
-        )
+      const response = await axios.post('/api/register', registerData)
+      return response
+
+    } catch (error: any) {
+      if(error.response) {
+        return Promise.reject(error.response.data)
       }
-    } catch (error) {
-      throw(error)
+      return Promise.reject({ message: 'Error de conexión' })
     }
 }
