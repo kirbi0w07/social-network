@@ -3,7 +3,8 @@ import { Icon } from '@iconify/vue'
 import SidebarHeader from '@/components/sidebar/SidebarHeader.vue'
 import SidebarQuickActions from '@/components/sidebar/SidebarQuickActions.vue'
 import SidebarListMenu from '@/components/sidebar/SidebarListMenu.vue'
-
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 const emit = defineEmits(['close'])
 </script>
 
@@ -16,6 +17,12 @@ const emit = defineEmits(['close'])
     <SidebarHeader />
     <SidebarQuickActions/>
     <SidebarListMenu/>
+    <section class="p-2" @click="authStore.logout">
+      <div class="flex items-center w-fit bg-slate-200 rounded-md p-1">
+        <Icon icon="heroicons:arrow-left-start-on-rectangle" width="28" color="#374151" />
+        <p>Logout</p>
+      </div>
+    </section>
   </aside>
 </template>
 

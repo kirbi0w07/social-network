@@ -1,4 +1,5 @@
 import MainLayout from '@/layouts/MainLayout.vue'
+import { useAuthStore } from '@/stores/auth'
 import AuthView from '@/views/auth/AuthView.vue'
 import SignInView from '@/views/auth/SignInView.vue'
 import SignUpView from '@/views/auth/SignUpView.vue'
@@ -26,12 +27,26 @@ const router = createRouter({
      component: AuthView,
      children: [
       {path: '', redirect: '/auth/sign-in'},
-      {path: 'sign-in', component: SignInView},
-      {path: 'sign-up', component: SignUpView},
+      {path: 'sign-in', component: SignInView, name: 'SignIn'},
+      {path: 'sign-up', component: SignUpView, name: 'SignUp'},
      ]
     },
     {path: '/welcome', component: WelcomeView},
   ],
+})
+
+router.beforeEach((to, from) => { 
+  const authStore = useAuthStore()
+  if(!authStore.isAuthenticated && to.matched.some(record => record.meta.requiresAuth)) {
+    return {name: 'SignIn'}
+  }
+
+  if (authStore.isAuthenticated && (to.path.startsWith('/auth') || to.name === 'SignIn')) {
+    return {name: 'Home'}
+  }
+
+  return true
+
 })
 
 export default router
