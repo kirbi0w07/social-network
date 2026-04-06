@@ -1,5 +1,5 @@
 <template lang="">
-    <nav class="flex gap-2 justify-around fixed bottom-0 bg-white py-2 w-full">
+    <nav class="flex gap-2 justify-around fixed bottom-0 bg-white py-2 w-full z-50">
         <router-link to="/">
             <Icon icon="heroicons:home-16-solid" width="24" color="#374151"/>
         </router-link> 

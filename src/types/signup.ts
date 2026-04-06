@@ -1,6 +1,7 @@
 export interface SignupData {
     name: string,
     last_name: string,
+    username: string,
     email: string,
     password: string,
     confirm_password: string,
@@ -14,6 +15,7 @@ export interface SignupData {
 export interface ErrorsSignupData {
     name?: string,
     last_name?: string,
+    username?: string,
     email?: string,
     password?: string,
     confirm_password?: string,
@@ -22,9 +24,12 @@ export interface ErrorsSignupData {
 }
 
 export interface SignupCredentials {
-  email: string,
-  name: string,
-  last_name: string,
-  password: string,
-  password_confirmation: string
+    email: string,
+    name: string,
+    last_name: string,
+    username: string,
+    password: string,
+    password_confirmation: string,
+    birthday: Date,
+    gender: string,
 }

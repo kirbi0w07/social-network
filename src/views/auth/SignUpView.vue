@@ -19,6 +19,13 @@
 
     <!-- STEP 2 -->
     <div class='flex flex-col gap-3' v-if="step === 2">
+      <h3 class="font-bold">Create your username</h3>
+      <small>Choose a unique username for your account.</small>
+      <BaseInput label='Username' v-model="signUpData.username" id='username' name='username' placeholder='E.g. john_wick' :error='errorsSignUpData.username'/>
+      <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
+    </div>
+    <!-- STEP 3 -->
+    <div class='flex flex-col gap-3' v-if="step === 3">
       <h3 class="font-bold">When were you born?</h3>
       <small>you can change the privacity of your birthday later.</small>
       <div class="flex flex-col">
@@ -45,16 +52,16 @@
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
-    <!-- STEP 3 -->
-    <div class='flex flex-col gap-3' v-if="step === 3">
+    <!-- STEP 4 -->
+    <div class='flex flex-col gap-3' v-if="step === 4">
       <h3 class="font-bold">Which genre do you identify with?</h3>
       <small>You can change who can see your gender on your profile later.</small>
       <div class="flex gap-2">
-        <input  type="radio" id="man" name="gender" value="man" v-model="signUpData.gender"/>
+        <input  type="radio" id="man" name="gender" value="male" v-model="signUpData.gender"/>
         <label class="font-medium" for="man">Man</label>
       </div>
       <div class="flex gap-2">
-        <input type="radio" id="woman" name="gender" value="woman" v-model="signUpData.gender"/>
+        <input type="radio" id="woman" name="gender" value="female" v-model="signUpData.gender"/>
         <label class="font-medium" for="woman">Woman</label>
       </div>
       <div class="flex gap-2">
@@ -62,23 +69,23 @@
         <label class="font-medium" for="other">Other</label>
       </div>
       <div class="flex gap-2">
-        <input type="radio" id="I’d rather not say" name="gender" value="I’d_rather_not_say" v-model="signUpData.gender"/>
+        <input type="radio" id="I’d rather not say" name="gender" value="i’d_rather_not_say" v-model="signUpData.gender"/>
         <label class="font-medium" for="I’d rather not say">I’d rather not say</label>
       </div>
       <p v-if="errorsSignUpData.gender" class="text-red-600 px-2 py-1">{{errorsSignUpData.gender}}</p>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
-    <!-- STEP 4 -->
-    <div class='flex flex-col gap-3' v-if="step === 4">
+    <!-- STEP 5 -->
+    <div class='flex flex-col gap-3' v-if="step === 5">
       <h3 class="font-bold">What's your email adress?</h3>
       <small>Enter an email address to verify your account. It will not appear on your profile.</small>
       <BaseInput id='email' type='email' name='email' label='Email' placeholder='E.g. user@mail.com' v-model="signUpData.email" :error="errorsSignUpData.email"/>
       <button type='button' class='bg-slate-900 text-white font-bold text-sm rounded py-3 mt-4' @click='nextStep'>Next step</button>
     </div>
 
-    <!-- STEP 5 -->
-    <div class='flex flex-col gap-3' v-if="step === 5">
+    <!-- STEP 6 -->
+    <div class='flex flex-col gap-3' v-if="step === 6">
       <h3 class="font-bold">Chose a secure password</h3>
 
       <BaseInput id='password' type='password' name='Password' label='Password' placeholder='Password' v-model="signUpData.password" :error="errorsSignUpData.password"/>
@@ -94,12 +101,14 @@
 </template>
 <script setup lang="ts">
 import {type ErrorsSignupData, type SignupCredentials, type SignupData } from '@/types/signup';
-import { ref } from 'vue';
+import {  ref, watch } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import { Icon } from '@iconify/vue';
 import { useAuthStore } from '@/stores/auth';
 import type { createProfileData } from '@/types/profile';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const authStore = useAuthStore()
 const months = [
   { name: 'January', value: 1 },
@@ -121,6 +130,7 @@ const step = ref(1)
 const signUpData = ref<SignupData>({
   name: '',
   last_name: '',
+  username: '',
   email: '',
   password: '',
   confirm_password: '',
@@ -133,6 +143,14 @@ const signUpData = ref<SignupData>({
 })
 
 const errorsSignUpData = ref<ErrorsSignupData>({})
+
+watch(() => signUpData.value.username, (newValue) => {
+  if (newValue) {
+    // Reemplazamos cualquier espacio por nada '' 
+    // o por un guion bajo '_' si prefieres forzar ese estilo
+    signUpData.value.username = newValue.replace(/\s/g, '').toLowerCase();
+  }
+});
 
 const validateStep = (() => {
   errorsSignUpData.value = {}
@@ -150,6 +168,23 @@ const validateStep = (() => {
   }
 
   if(step.value === 2) {
+  const { username } = signUpData.value;
+  
+  if(!username) {
+    errorsSignUpData.value.username = 'Username is required';
+    return false;
+  }
+
+  // Regex que solo permite letras, números, guiones bajos y puntos
+  const usernameRegex = /^[a-zA-Z0-9._]+$/;
+  
+  if(!usernameRegex.test(username)) {
+    errorsSignUpData.value.username = 'Username cannot contain spaces or special characters';
+    return false;
+  }
+}
+
+  if(step.value === 3) {
     const {day, month, year} = signUpData.value.birthDate
   if (!day || !month || !year) {
     errorsSignUpData.value.birthDate = 'Select your birthday date'
@@ -168,7 +203,7 @@ const validateStep = (() => {
   }
   }
 
-  if(step.value === 3) {
+  if(step.value === 4) {
 
     const {gender} = signUpData.value
     if(!gender){
@@ -177,7 +212,7 @@ const validateStep = (() => {
     }
   }
 
-  if(step.value === 4) {
+  if(step.value === 5) {
     const {email} = signUpData.value
     if (!email) {
       errorsSignUpData.value.email = "Email is required"
@@ -233,30 +268,27 @@ const validatePassword = (()=> {
 
 const createUserFromSignup = ((): SignupCredentials => {
   const data = signUpData.value
-  // const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
+  const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
+  const formattedBirthday = birthDate.toISOString().split('T')[0]
   return {
     name: data.name,
     last_name: data.last_name,
+    username: data.username,
     email: data.email,
     password: data.password,
-    password_confirmation: data.confirm_password
-}
-})
-const createProfileFromSignup = ((): createProfileData => {
-  const data = signUpData.value
-   const birthDate = new Date(data.birthDate.year!, data.birthDate.month! - 1, data.birthDate.day!)
-  return {
-    birthday: birthDate,
+    password_confirmation: data.confirm_password,
+    birthday: formattedBirthday as unknown as Date,
     gender: data.gender,
 }
 })
+
 const signUp = (async () => {
   try {
   if(!validatePassword()) return
   const signupCredentials: SignupCredentials  = createUserFromSignup()
-  await authStore.registerUser(signupCredentials)
-  const profileData = createProfileFromSignup()
-  await authStore.storeProfile(profileData)
+  console.log(signupCredentials);
+  await authStore.registerUser(signupCredentials);
+  router.push({ name: 'Home' });
   } catch (error) {
     console.log(error)
   }

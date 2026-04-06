@@ -7,10 +7,13 @@ import type { SigninData } from "@/types/signin";
 import type { SignupCredentials } from "@/types/signup";
 import type { createProfileData } from "@/types/profile";
 import { createProfileService } from "@/services/ProfileService";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore('auth', () => {
 const user = ref<User | null>(null)
 const authenticated = ref(false)
+
+const router = useRouter()
 
 const isAuthenticated = computed(() => authenticated.value)
 const currentUser = computed(() => user.value)
@@ -20,8 +23,8 @@ const loginUser = async (credentials: SignupCredentials) => {
 }
 const registerUser = async (credentials: SignupCredentials) => {
   const {data} = await registerService(credentials);
-  console.log(data.access_token)
-  localStorage.setItem('social-network-token', data.access_token)
+  localStorage.setItem('social-network-token', data.token)
+  return data
 }
 
 const storeProfile = async (profileData: createProfileData) => {
@@ -37,12 +40,17 @@ const logout = () => {
   authenticated.value = false
 }
 
+const goToMyProfile = () => {
+  router.push({ name: 'Profile' })
+}
+
 return {
   currentUser,
   isAuthenticated,
   loginUser,
   registerUser,
   storeProfile,
-  logout
+  logout,
+  goToMyProfile,
 }
 })

@@ -16,8 +16,8 @@ const router = createRouter({
       component: MainLayout,
       meta: {requiresAuth: true},
       children: [
-        {path: '', component: HomeView},
-        {path: '/profile', component: ProfileView},
+        {path: '', component: HomeView, name: 'Home'},
+        {path: '/profile', component: ProfileView, name: 'Profile'},
         {path: '/messages', component: MessagesView},
         // {path: '/search', component: HomeView},
       ]

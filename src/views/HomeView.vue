@@ -15,10 +15,10 @@
 
     <!-- Posts Section -->
     <section class="bg-white mb-1">
-      <PostCard/>
+      <!-- <PostCard/>
       <PostCard />
       <PostCard />
-      <PostCard />
+      <PostCard /> -->
     </section>
   </div>
 </template>

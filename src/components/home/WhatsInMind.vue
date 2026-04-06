@@ -1,6 +1,6 @@
 <template>
   <article class="flex gap-2 items-center bg-white w-full pl-2 pr-2 pt-3 pb-4">
-    <img src="../../assets/@lilithBlackheim.jfif" alt="@lilithBlackheim" title="@lilithBlackheim"
+    <img src="../../assets/@lilithBlackheim.jfif" alt="@lilithBlackheim" title="@lilithBlackheim" 
       class="w-7 h-7 rounded-full object-cover" />
     <div class="flex flex-1 py-1 text-slate-900 rounded-2xl border border-slate-200">
       <p class="px-4" @click="toggleWhatsOnMindForm">What's on your mind?</p>
