@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { User, UserWithPassword } from "@/types/user";
+import type { User } from "@/types/user";
 import { computed, ref } from "vue";
 import { mockUsers } from "@/data/users";
 import { loginService, logoutService, registerService } from "@/services/AuthService";
@@ -80,6 +80,7 @@ const getUser = async () => {
 };
 
 return {
+  user,
   currentUser,
   isAuthenticated,
   getFullToken,

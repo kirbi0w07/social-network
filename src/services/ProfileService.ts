@@ -11,7 +11,10 @@ export const createProfileService = async (profileData: createProfileData) => {
 }
 export const upluadProfilePictureService = async (file: File) => {
   try {
-    return await axios.post('/api/profile_pictures/store', file, {
+    const formData = new FormData();
+
+    formData.append('profile_picture', file);
+    return await axios.post('/api/profile_pictures', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

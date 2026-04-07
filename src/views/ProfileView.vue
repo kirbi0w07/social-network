@@ -44,9 +44,10 @@
 </template>
 <script setup lang="ts">
 import { upluadProfilePictureService } from '@/services/ProfileService';
+import { useAuthStore } from '@/stores/auth';
 import { Icon } from '@iconify/vue'
 import { ref } from 'vue';
-
+const authStore = useAuthStore()
 const fileInput = ref<HTMLInputElement | null>(null)
 const showProfilePicturesOptions = ref(false)
 
@@ -68,7 +69,8 @@ const handleFileChange = async (event: Event) => {
 }
 
 const uploadFilePicture = async(file: File) => {
-    await upluadProfilePictureService(file)
+    const {data} = await upluadProfilePictureService(file)
+
 }
 
 </script>

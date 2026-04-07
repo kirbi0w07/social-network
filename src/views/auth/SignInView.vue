@@ -14,6 +14,7 @@ import type { ErrorsSigninData, SigninData } from '@/types/signin';
 import { ref } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import { useRouter } from 'vue-router';
+import { isAxiosError } from 'axios';
 const router = useRouter()
 const authStore = useAuthStore()
 const signInData = ref<SigninData>({
@@ -46,10 +47,12 @@ const errorsSignInData = ref<ErrorsSigninData>({})
   const signIn = async () => {
     try {
       if (!validateErrors()) return;
-      const data = await authStore.loginUser(signInData.value)
+      await authStore.loginUser(signInData.value)
       router.push({name: 'Home'})
-    } catch (error: any) {
-      errorsSignInData.value.email = error.message
+    } catch (error: unknown) {
+      if(isAxiosError(error) && error.response) {
+        errorsSignInData.value.email = error.message
+      }
     }
   }
 </script>

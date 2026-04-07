@@ -105,7 +105,6 @@ import {  ref, watch } from 'vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import { Icon } from '@iconify/vue';
 import { useAuthStore } from '@/stores/auth';
-import type { createProfileData } from '@/types/profile';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
