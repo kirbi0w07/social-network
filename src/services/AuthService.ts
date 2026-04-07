@@ -25,4 +25,15 @@ export const registerService = async (registerData: SignupCredentials) => {
       }
       return Promise.reject({ message: 'Error de conexión' })
     }
-}
+
+  }
+
+  export const logoutService = async () => {
+    try {
+      const response = await axios.post('/api/logout')
+    } catch (error: any) {
+      if(error.response) {
+        return Promise.reject(error.response.data)
+      }
+    }
+  }

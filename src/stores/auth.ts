@@ -2,21 +2,22 @@ import { defineStore } from "pinia";
 import type { User, UserWithPassword } from "@/types/user";
 import { computed, ref } from "vue";
 import { mockUsers } from "@/data/users";
-import { loginService, registerService } from "@/services/AuthService";
+import { loginService, logoutService, registerService } from "@/services/AuthService";
 import type { SigninData } from "@/types/signin";
 import type { SignupCredentials } from "@/types/signup";
 import type { createProfileData } from "@/types/profile";
 import { createProfileService } from "@/services/ProfileService";
-import { useRouter } from "vue-router";
-
+import axios from "@/lib/axios";
+import router from "@/router";
 export const useAuthStore = defineStore('auth', () => {
 const user = ref<User | null>(null)
 const authenticated = ref(false)
 
-const router = useRouter()
-
 const isAuthenticated = computed(() => !!token.value)
 const currentUser = computed(() => user.value)
+const getFullToken = computed(() => {
+        return token.value ? `Bearer ${token.value}` : null;
+    });
 
 const token = ref<string | null>(localStorage.getItem('social-network-token'))
 const loginUser = async (credentials: SigninData) => {
@@ -32,6 +33,7 @@ const registerUser = async (credentials: SignupCredentials) => {
   token.value = data.token
   authenticated.value = true
   localStorage.setItem('social-network-token', data.token)
+  user.value = data.user
   return data
 }
 
@@ -43,26 +45,50 @@ const storeProfile = async (profileData: createProfileData) => {
   }
 }
 
-const logout = () => {
-  user.value = null
-  authenticated.value = false
-  token.value = null
-  localStorage.removeItem('social-network-token')
-  router.push({ name: 'SignIn' })
-}
+const logout = async () => {
+    try {
+      await logoutService();
+    } catch (error) {
+        console.error("Error al avisar al servidor", error);
+    } finally {
+        user.value = null;
+        token.value = null;
+        if (typeof authenticated.value !== 'undefined') {
+            authenticated.value = false;
+        }
 
+        localStorage.removeItem('social-network-token');
+        delete axios.defaults.headers.common['Authorization'];
+
+        router.push({ name: 'SignIn' });
+    }
+};
 const goToMyProfile = () => {
   router.push({ name: 'Profile' })
 }
 
+const getUser = async () => {
+    if (!token.value) return;
+
+    try {
+        const { data } = await axios.get('/api/user');
+        user.value = data;
+        authenticated.value = true;
+    } catch (error) {
+        logout();
+    }
+};
+
 return {
   currentUser,
   isAuthenticated,
+  getFullToken,
   token,
   loginUser,
   registerUser,
   storeProfile,
   logout,
   goToMyProfile,
+  getUser,
 }
 })
