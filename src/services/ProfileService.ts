@@ -1,15 +1,14 @@
-import type { createProfileData } from "@/types/profile";
 import axios from '@/lib/axios'
 
-export const createProfileService = async (profileData: createProfileData) => {
+export const getProfileService = async (id: number) => {
   try {
-    return await axios.post('/api/profile', profileData);
+    return await axios.get(`/api/profile/${id}`);
   } catch (error) {
     throw(error)
   }
-
 }
-export const upluadProfilePictureService = async (file: File) => {
+
+export const uploadProfilePictureService = async (file: File) => {
   try {
     const formData = new FormData();
 
