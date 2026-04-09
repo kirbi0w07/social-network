@@ -5,8 +5,6 @@ import { mockUsers } from "@/data/users";
 import { loginService, logoutService, registerService } from "@/services/AuthService";
 import type { SigninData } from "@/types/signin";
 import type { SignupCredentials } from "@/types/signup";
-import type { createProfileData } from "@/types/profile";
-import { createProfileService } from "@/services/ProfileService";
 import axios from "@/lib/axios";
 import router from "@/router";
 export const useAuthStore = defineStore('auth', () => {
@@ -20,6 +18,7 @@ const getFullToken = computed(() => {
     });
 
 const token = ref<string | null>(localStorage.getItem('social-network-token'))
+
 const loginUser = async (credentials: SigninData) => {
   const {data} = await loginService(credentials);
   token.value = data.token
@@ -71,7 +70,7 @@ const getUser = async () => {
     if (!token.value) return;
 
     try {
-        const { data } = await axios.get('/api/user');
+        const { data } = await axios.get('/api/me');
         user.value = data;
         authenticated.value = true;
     } catch (error) {

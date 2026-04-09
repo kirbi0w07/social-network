@@ -4,9 +4,11 @@ export interface PostAuthor {
   avatar: string
 }
 
-export interface MediaItem {
-  type: 'image' | 'video',
-  url: string
+export interface MediaFile {
+  id: string; 
+  file: File;
+  previewUrl: string;
+  type: 'image' | 'video';
 }
 
 export interface Post {
