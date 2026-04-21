@@ -26,7 +26,7 @@
         <li class="flex items-center pl-3 py-2 gap-x-2" @click="changeProfilePicture" >
             <Icon icon="heroicons:photo-solid" width="34" color="#374151" class="bg-slate-200 rounded-full p-2" />
             <p class="flex-1">Chose profile picture</p></li>
-        <li class="flex items-center pl-3 py-2 gap-x-2" @click="togglePictureModal">
+        <li class="flex items-center pl-3 py-2 gap-x-2" :class="[isSeeProfileDisabled ?? 'opacity-40 cursor-not-allowed grayscale']" @click="togglePictureModal">
             <Icon icon="heroicons:photo-solid" width="34" color="#374151" class="bg-slate-200 rounded-full p-2" />
             <p class="flex-1">See profile</p>
         </li>
@@ -39,11 +39,11 @@
 
 
     <!-- input file hidden -->
-    <input 
-    type="file" 
-    ref="fileInput" 
-    class="hidden" 
-    accept="image/*" 
+    <input
+    type="file"
+    ref="fileInput"
+    class="hidden"
+    accept="image/*"
     @change="handleFileChange"
     />
 
@@ -59,20 +59,20 @@
                     :pagination="{ clickable: true }"
                     class="rounded-lg overflow-hidden"
                 >
-                    <swiper-slide 
-                    v-for="picture in user.profile.profile_pictures.toReversed()" 
+                    <swiper-slide
+                    v-for="picture in user.profile.profile_pictures.toReversed()"
                     :key="picture.id"
                     class="flex justify-center items-center bg-black/20 aspect-[4/3]"
                     >
-                    <img 
-                        :src="picture.full_url" 
+                    <img
+                        :src="picture.full_url"
                         class="w-full h-full object-contain mx-auto"
-                        @click.stop 
+                        @click.stop
                     />
                     </swiper-slide>
                 </swiper>
-    
-                <!-- <button 
+
+                <!-- <button
                     @click="showPictureModal = false"
                     class="absolute -top-10 right-4 text-white text-3xl font-bold hover:text-gray-300"
                 >
@@ -80,7 +80,7 @@
                 </button> -->
             </div>
         </div>
-    </section>    
+    </section>
 </template>
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
@@ -106,6 +106,8 @@ const { uploadProfilePicture } = useProfileStore()
 
 const showProfilePicturesOptions = ref(false)
 const showPictureModal = ref(false)
+
+const isSeeProfileDisabled = (() => !user?.profile.profile_pictures.length)
 
 const togglePictureModal = () => {
     showPictureModal.value = !showPictureModal.value

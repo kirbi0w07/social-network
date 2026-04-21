@@ -14,12 +14,16 @@
     <AddHistory />
 
     <!-- Posts Section -->
-    <section class="bg-white mb-1">
-      <!-- <PostCard/>
-      <PostCard />
-      <PostCard />
-      <PostCard /> -->
-    </section>
+    <section
+    class="bg-white mb-1">
+      <div v-if="postStore.isCreatingPost" class="relative border border-dashed border-slate-400 rounded-lg">
+        <div class="group animate-pulse opacity-30">
+          <PostCard :post="postStore.tempPost"/>
+        </div>
+         <p class="font-semibold text-slate-600 absolute inset-0 flex items-center justify-center">Posting...</p>
+      </div>
+      <PostCard v-for="(post, index) in postStore.recentPosts" :key="index" :post/>
+   </section>
   </div>
 </template>
 <script lang="ts" setup>
@@ -27,5 +31,13 @@ import NavbarHome from '@/components/layout/NavbarHome.vue'
 import WhatsInMind from '@/components/home/WhatsInMind.vue'
 import AddHistory from '@/components/home/AddHistory.vue'
 import PostCard from '@/components/PostCard.vue'
+import { onMounted, ref } from 'vue'
+import { usePostStore } from '@/stores/post'
+import type { Post } from '@/types/post'
+const postStore = usePostStore()
+onMounted(async () => {
+ const {data} =  await postStore.getRecentPosts()
+ postStore.recentPosts = data.posts
+})
 </script>
 <style lang=""></style>

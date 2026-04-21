@@ -69,7 +69,7 @@
         <label class="font-medium" for="other">Other</label>
       </div>
       <div class="flex gap-2">
-        <input type="radio" id="I’d rather not say" name="gender" value="i’d_rather_not_say" v-model="signUpData.gender"/>
+        <input type="radio" id="I’d rather not say" name="gender" value="prefer_not_to_say" v-model="signUpData.gender"/>
         <label class="font-medium" for="I’d rather not say">I’d rather not say</label>
       </div>
       <p v-if="errorsSignUpData.gender" class="text-red-600 px-2 py-1">{{errorsSignUpData.gender}}</p>
@@ -145,7 +145,7 @@ const errorsSignUpData = ref<ErrorsSignupData>({})
 
 watch(() => signUpData.value.username, (newValue) => {
   if (newValue) {
-    // Reemplazamos cualquier espacio por nada '' 
+    // Reemplazamos cualquier espacio por nada ''
     // o por un guion bajo '_' si prefieres forzar ese estilo
     signUpData.value.username = newValue.replace(/\s/g, '').toLowerCase();
   }
@@ -168,7 +168,7 @@ const validateStep = (() => {
 
   if(step.value === 2) {
   const { username } = signUpData.value;
-  
+
   if(!username) {
     errorsSignUpData.value.username = 'Username is required';
     return false;
@@ -176,7 +176,7 @@ const validateStep = (() => {
 
   // Regex que solo permite letras, números, guiones bajos y puntos
   const usernameRegex = /^[a-zA-Z0-9._]+$/;
-  
+
   if(!usernameRegex.test(username)) {
     errorsSignUpData.value.username = 'Username cannot contain spaces or special characters';
     return false;
