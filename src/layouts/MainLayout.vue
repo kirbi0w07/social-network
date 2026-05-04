@@ -1,7 +1,9 @@
 <template lang="">
-    <div class="layout">
-        <NavbarMain/>
+    <div class="layout flex flex-col h-screen">
+      <main class="flex-1 relative overflow-y-auto">
         <RouterView/>
+      </main>
+      <NavbarMain/>
     </div>
 </template>
 <script lang="ts" setup>

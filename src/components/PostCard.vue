@@ -80,9 +80,23 @@ const reactionMenu = ref<HTMLElement | null>(null);
           <span>123</span>
         </button>
       </div>
-
     </footer>
   </article>
+
+  <!-- comment a post section -->
+
+     <section class="flex flex-col w-full bg-slate-200 h-[calc(100vh-5rem)] rounded-4xl fixed top-10 left-0">
+      <header class="p-3">
+        <p>reaction count</p>
+      </header>
+      <div class="flex-1">
+        comments section
+      </div>
+      <footer class="p-3">
+        commentable section
+      </footer>
+     </section>
+
 </template>
 
 <style scoped></style>
