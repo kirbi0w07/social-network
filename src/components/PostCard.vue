@@ -3,6 +3,7 @@ import { Icon } from '@iconify/vue'
 import UserAvatar from './ui/UserAvatar.vue';
 import { nextTick, ref } from 'vue';
 import { usePostStore } from '@/stores/post';
+import CloseButton from './CloseButton.vue';
 const postStore = usePostStore()
  defineProps(['post'])
 const reactionMenu = ref<HTMLElement | null>(null);
@@ -13,6 +14,8 @@ const reactionMenu = ref<HTMLElement | null>(null);
   fire: {icon: 'heroicons:fire', icon_fill: 'heroicons:fire-solid', label: 'Fire'},
  } as const
 
+ const commentContent = ref('')
+const showCommentSection = ref(false)
   type ReactionType = keyof typeof REACTION_TYPES;
   const showReactionOpts = ref(false)
 
@@ -27,7 +30,10 @@ const reactionMenu = ref<HTMLElement | null>(null);
 
   const reactToPost = async (postId :number, type: ReactionType) => {
     await postStore.rectToPost(postId, type)
+  }
 
+  const toggleCommentSection = () => {
+    showCommentSection.value = !showCommentSection.value
   }
 </script>
 
@@ -71,7 +77,7 @@ const reactionMenu = ref<HTMLElement | null>(null);
             </button>
           </div>
         </div>
-        <button class="flex items-center gap-1">
+        <button class="flex items-center gap-1" @click="toggleCommentSection">
           <Icon icon="heroicons:chat-bubble-bottom-center-text" width="24" color="#374151" />
           <span>{{post.comments_count}}</span>
         </button>
@@ -85,17 +91,25 @@ const reactionMenu = ref<HTMLElement | null>(null);
 
   <!-- comment a post section -->
 
-     <section class="flex flex-col w-full bg-slate-200 h-[calc(100vh-5rem)] rounded-4xl fixed top-10 left-0">
-      <header class="p-3">
+     <div v-if="showCommentSection" class="w-full h-screen fixed top-10 left-0 bg-slate-800/45">
+      <section class="flex flex-col h-[calc(100vh-5rem)] bg-white rounded-t-2xl">
+      <header class="p-3 flex justify-between">
         <p>reaction count</p>
+        <CloseButton :close="toggleCommentSection"/>
       </header>
       <div class="flex-1">
         comments section
       </div>
       <footer class="p-3">
-        commentable section
+      <textarea
+              type="text"
+              placeholder="What's on your mind?"
+              class="w-full outline-0 resize-none bg-slate-200 rounded-xl h-fit px-2 pt-1"
+              v-model="commentContent"
+            ></textarea>
       </footer>
      </section>
+     </div>
 
 </template>
 
