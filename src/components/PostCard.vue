@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import UserAvatar from './ui/UserAvatar.vue';
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, Transition } from 'vue';
 import { usePostStore } from '@/stores/post';
-import CloseButton from './CloseButton.vue';
+import CommentAPost from './CommentAPost.vue';
 const postStore = usePostStore()
- defineProps(['post'])
+ const props = defineProps(['post'])
 const reactionMenu = ref<HTMLElement | null>(null);
  const REACTION_TYPES = {
   like: {icon: 'heroicons:hand-thumb-up', icon_fill: 'heroicons:hand-thumb-up-solid', label: 'Like'},
@@ -14,7 +14,6 @@ const reactionMenu = ref<HTMLElement | null>(null);
   fire: {icon: 'heroicons:fire', icon_fill: 'heroicons:fire-solid', label: 'Fire'},
  } as const
 
- const commentContent = ref('')
 const showCommentSection = ref(false)
   type ReactionType = keyof typeof REACTION_TYPES;
   const showReactionOpts = ref(false)
@@ -90,27 +89,30 @@ const showCommentSection = ref(false)
   </article>
 
   <!-- comment a post section -->
-
-     <div v-if="showCommentSection" class="w-full h-screen fixed top-10 left-0 bg-slate-800/45">
-      <section class="flex flex-col h-[calc(100vh-5rem)] bg-white rounded-t-2xl">
-      <header class="p-3 flex justify-between">
-        <p>reaction count</p>
-        <CloseButton :close="toggleCommentSection"/>
-      </header>
-      <div class="flex-1">
-        comments section
-      </div>
-      <footer class="p-3">
-      <textarea
-              type="text"
-              placeholder="What's on your mind?"
-              class="w-full outline-0 resize-none bg-slate-200 rounded-xl h-fit px-2 pt-1"
-              v-model="commentContent"
-            ></textarea>
-      </footer>
-     </section>
-     </div>
+  <Transition name="commentSection" >
+    <CommentAPost  v-if="showCommentSection" @toggleOpen="toggleCommentSection" :post="props.post"/>
+  </Transition>
 
 </template>
 
-<style scoped></style>
+<style scoped>
+.commentSection-enter-active,
+.commentSection-leave-active {
+  transition:
+    transform 0.2s ease-in-out;
+}
+
+.commentSection-enter-from {
+  transform: translatey(100%);
+
+}
+
+.commentSection-enter-to {
+  transform: translatey(0);
+}
+
+.commentSection-leave-to {
+  transform: translatey(100%);
+
+}
+</style>

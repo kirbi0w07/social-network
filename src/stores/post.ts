@@ -3,7 +3,7 @@ import { useAuthStore } from "./auth"
 import { ref,computed } from "vue"
 import type { Profile } from "@/types/profile"
 import axios from "@/lib/axios"
-import { getRecentPostsService, reactToPostServie } from "@/services/PostService"
+import { getRecentPostsService, reactToPostServie, commentAPostService } from "@/services/PostService"
 import type { Post, TempPost } from "@/types/post"
 
 export const usePostStore = defineStore('post', () => {
@@ -70,5 +70,11 @@ export const usePostStore = defineStore('post', () => {
     }
     }
 
-    return {recentPosts,isCreatingPost, tempPost, getRecentPosts, addPost, startCreatingTempPost,rectToPost, updatePostReaction}
+    const commentAPost = async (postId: number, comment: string) => {
+      return await commentAPostService(postId, comment)
+    }
+
+    return {recentPosts,isCreatingPost, tempPost, getRecentPosts, addPost, startCreatingTempPost,rectToPost, updatePostReaction, commentAPost}
     })
+
+

@@ -25,3 +25,11 @@ export const getRecentPostsService = async () => {
 export const reactToPostServie = async (postId: number, type: string) => {
   return await axios.post(`/api/post/${postId}/react`, {post_id: postId, type})
 }
+
+export const commentAPostService = async (postId: number, comment: string) => {
+  return await axios.post(`/api/post/${postId}/comment`, {post_id: postId, comment})
+}
+
+export const getCommentsOfPostService = async (postId: number) => {
+  return await axios.post(`/api/post/${postId}/get_comment`, {post_id: postId})
+}
