@@ -1,46 +1,45 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import UserAvatar from './ui/UserAvatar.vue';
-import { nextTick, ref, Transition } from 'vue';
+import { ref } from 'vue';
 import { usePostStore } from '@/stores/post';
 import CommentAPost from './CommentAPost.vue';
+import ReactionButton from './ui/ReactionButton.vue';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+const modules = [Navigation, Pagination];
 const postStore = usePostStore()
- const props = defineProps(['post'])
-const reactionMenu = ref<HTMLElement | null>(null);
- const REACTION_TYPES = {
-  like: {icon: 'heroicons:hand-thumb-up', icon_fill: 'heroicons:hand-thumb-up-solid', label: 'Like'},
-  love: {icon: 'heroicons:heart', icon_fill: 'heroicons:heart-solid', label: 'Love'},
-  smile: {icon: 'heroicons:face-smile', icon_fill: 'heroicons:face-smile-solid', label: 'Smile'},
-  fire: {icon: 'heroicons:fire', icon_fill: 'heroicons:fire-solid', label: 'Fire'},
- } as const
+const props = defineProps(['post'])
+
 
 const showCommentSection = ref(false)
-  type ReactionType = keyof typeof REACTION_TYPES;
-  const showReactionOpts = ref(false)
+const showPostMedia = ref(false)
 
-  const openReactionOpts = async () => {
-    showReactionOpts.value = !showReactionOpts.value
-    if (showReactionOpts.value) {
-    // Esperamos al siguiente tick para que el div exista en el DOM
-    await nextTick();
-    reactionMenu.value?.focus();
-  }
-  }
 
-  const reactToPost = async (postId :number, type: ReactionType) => {
-    await postStore.rectToPost(postId, type)
-  }
 
-  const toggleCommentSection = () => {
-    showCommentSection.value = !showCommentSection.value
-  }
+
+const reactToPost = async (postId: number, type: 'like' | 'love' | 'smile' | 'fire') => {
+  await postStore.rectToPost(postId, type)
+}
+
+const toggleCommentSection = () => {
+  showCommentSection.value = !showCommentSection.value
+}
+
+const togglePostMedia = () => {
+  showPostMedia.value = !showPostMedia.value
+}
+
 </script>
 
 <template>
-  <article class="w-screen">
+  <article class="w-full">
     <header class="flex justify-between p-2 text-slate-900">
       <div class="flex items-center gap-1">
-        <UserAvatar :user="post.user" :alt="post.user" :title="post.user"/>
+        <UserAvatar :user="post.user" :alt="post.user" :title="post.user" />
         <div class="flex flex-col">
           <p class="font-medium text-sm">{{ post.user.name }} {{ post.user.last_name }}</p>
           <p class="text-xs text-slate-700">1h</p>
@@ -53,32 +52,93 @@ const showCommentSection = ref(false)
     </header>
     <div class="px-2">
       <p>{{ post.body }}</p>
+
+      <section>
+        <!-- 1 imagen -->
+        <div v-if="post?.media?.length === 1" class="py-2">
+          <img :src="post.media[0].file_url" alt="" @click="togglePostMedia"
+            class="w-full max-h-[600px] object-cover rounded-lg cursor-pointer" />
+        </div>
+
+
+        <!-- 2 imágenes -->
+        <div v-else-if="post?.media?.length === 2" class="grid grid-cols-2 gap-1 py-2">
+          <div v-for="(media, index) in post.media" :key="media.id" class="relative aspect-square overflow-hidden">
+            <img :src="media.file_url" alt="" @click="togglePostMedia"
+              class="w-full h-full object-cover rounded-lg cursor-pointer" />
+          </div>
+        </div>
+
+
+        <!-- 3 o más imágenes -->
+        <div v-else-if="post?.media?.length >= 3" class="grid grid-cols-2 gap-1 py-2">
+
+          <!-- Imagen grande -->
+          <div class="row-span-2 relative overflow-hidden">
+            <img :src="post.media[0].file_url" alt="" @click="togglePostMedia"
+              class="w-full h-full object-cover rounded-lg cursor-pointer" />
+          </div>
+
+
+          <!-- Imagen pequeña superior -->
+          <div class="relative aspect-square overflow-hidden">
+            <img :src="post.media[1].file_url" alt="" @click="togglePostMedia"
+              class="w-full h-full object-cover rounded-lg cursor-pointer" />
+          </div>
+
+
+          <!-- Imagen pequeña inferior + contador -->
+          <div class="relative aspect-square overflow-hidden">
+
+            <img :src="post.media[2].file_url" alt="" @click="togglePostMedia"
+              class="w-full h-full object-cover rounded-lg cursor-pointer" />
+
+            <!-- +N -->
+            <div v-if="post.media.length > 3" @click="togglePostMedia"
+              class="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer rounded-lg">
+              <span class="text-white text-3xl font-bold">
+                +{{ post.media.length - 3 }}
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
     </div>
+    <!-- modal ver fotos -->
+    <!-- modal ver fotos -->
+    <section v-if="showPostMedia" class="fixed inset-0 z-[99] w-screen h-screen bg-slate-900/50">
+      <!-- Fondo: al hacer clic aquí se cierra -->
+      <div @click="showPostMedia = false" class="w-full h-full flex justify-center items-center">
+
+        <!-- Contenido: el clic NO llega al padre -->
+        <div @click.stop class="relative w-[90%] max-w-4xl px-4 z-[60]">
+
+          <swiper :modules="modules" :slides-per-view="1" :space-between="10" navigation
+            :pagination="{ clickable: true }" class="rounded-lg overflow-hidden">
+
+            <swiper-slide v-for="picture in post.media" :key="picture.id"
+              class="flex justify-center items-center bg-black/20 aspect-[4/3]">
+
+              <img :src="picture.file_url" class="w-full h-full object-contain mx-auto" />
+
+            </swiper-slide>
+
+          </swiper>
+
+        </div>
+      </div>
+    </section>
+
     <footer class="flex py-4">
       <div class="flex flex-1 justify-around gap-2">
         <div class="relative">
-          <button type="button" @click="openReactionOpts" class="flex items-center gap-1">
-         <Icon
-            :icon="post.user_reaction
-              ? REACTION_TYPES[post.user_reaction.type as ReactionType].icon_fill
-              : (post.last_type
-                  ? REACTION_TYPES[post.last_type as ReactionType].icon
-                  : 'heroicons:hand-thumb-up')"
-            width="24"
-            color="#374151"
-         />
-          <span>{{post.reactions_count}}</span>
-          </button>
-          <!-- reaction opts  -->
-          <div ref="reactionMenu" tabindex="-1" v-if="showReactionOpts" @blur="openReactionOpts" @mousedown.prevent class="absolute top-10 w-max flex bg-white shadow shadow-slate-300 p-1">
-            <button v-for="(data, type) in REACTION_TYPES" :key="type" @click="reactToPost(post.id,type)" class="px-2 hover:scale-125 transition-transform">
-              <Icon :icon="data.icon" width="24" color="#374151"/>
-            </button>
-          </div>
+          <ReactionButton :post="props.post" @react="(type) => reactToPost(post.id, type)" />
         </div>
         <button class="flex items-center gap-1" @click="toggleCommentSection">
           <Icon icon="heroicons:chat-bubble-bottom-center-text" width="24" color="#374151" />
-          <span>{{post.comments_count}}</span>
+          <span>{{ post.comments_count }}</span>
         </button>
         <button class="flex items-center gap-1">
           <Icon icon="heroicons:arrow-top-right-on-square-solid" width="24" color="#374151" />
@@ -89,9 +149,11 @@ const showCommentSection = ref(false)
   </article>
 
   <!-- comment a post section -->
-  <Transition name="commentSection" >
-    <CommentAPost  v-if="showCommentSection" @toggleOpen="toggleCommentSection" :post="props.post"/>
-  </Transition>
+  <Teleport to="body">
+    <Transition name="commentSection">
+      <CommentAPost v-if="showCommentSection" @toggleOpen="toggleCommentSection" :post="props.post" />
+    </Transition>
+  </Teleport>
 
 </template>
 
@@ -114,5 +176,15 @@ const showCommentSection = ref(false)
 .commentSection-leave-to {
   transform: translatey(100%);
 
+}
+
+:root {
+  --swiper-navigation-color: #fff;
+  --swiper-pagination-color: #fff;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
 </style>

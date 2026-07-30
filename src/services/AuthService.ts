@@ -5,27 +5,27 @@ import { isAxiosError } from 'axios';
 
 
 export const loginService = async (loginData: SigninData) => {
-    try {
-      const response = await axios.post('/api/login', loginData)
-      return response
-    } catch (error: unknown) {
-      if(isAxiosError(error) && error.response) {
-        return Promise.reject(error.response.data)
-      }
-      return Promise.reject({ message: 'Error de conexión' })
+  try {
+    const response = await axios.post('/api/login', loginData)
+    return response
+  } catch (error: unknown) {
+    if (isAxiosError(error) && error.response) {
+      return Promise.reject(error.response.data)
     }
+    return Promise.reject({ message: 'Error de conexión' })
+  }
 }
 export const registerService = async (registerData: SignupCredentials) => {
-    try {
-      const response = await axios.post('/api/register', registerData)
-      return response
+  try {
+    const response = await axios.post('/api/register', registerData)
+    return response
 
-    } catch (error: unknown) {
-      if(isAxiosError(error) && error.response) {
-        return Promise.reject(error.response.data)
-      }
-      return Promise.reject({ message: 'Error de conexión' })
+  } catch (error: unknown) {
+    if (isAxiosError(error) && error.response) {
+      return Promise.reject(error.response.data)
     }
+    return Promise.reject({ message: 'Error de conexión' })
+  }
 }
 
 export const logoutService = async () => {
@@ -33,7 +33,18 @@ export const logoutService = async () => {
     const response = await axios.post('/api/logout')
     return response
   } catch (error: unknown) {
-    if(isAxiosError(error) && error.response) {
+    if (isAxiosError(error) && error.response) {
+      return Promise.reject(error.response.data)
+    }
+    return Promise.reject({ message: 'Error de conexión' })
+  }
+}
+export const getUserByUsernameService = async (username: string) => {
+  try {
+    const response = await axios.get(`/api/get_user_by_username?username=${username}`)
+    return response
+  } catch (error: unknown) {
+    if (isAxiosError(error) && error.response) {
       return Promise.reject(error.response.data)
     }
     return Promise.reject({ message: 'Error de conexión' })

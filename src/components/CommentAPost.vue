@@ -2,7 +2,7 @@
      <div class="w-full h-screen fixed top-10 left-0 bg-slate-800/45">
       <section class="flex flex-col h-[calc(100vh-5rem)] bg-white rounded-t-2xl  overflow-y-scroll">
       <header class="p-3 flex justify-between">
-        <p>reaction count</p>
+        <p class="font-bold text-slate-700">Reactions {{props.post.reactions_count}}</p>
         <CloseButton @close="$emit('toggleOpen')"/>
       </header>
       <div class="flex-1">
@@ -29,13 +29,13 @@ import CloseButton from './CloseButton.vue';
 import CommentCard from './CommentCard.vue';
 import { usePostStore } from '@/stores/post';
 import { getCommentsOfPostService } from '@/services/PostService'
-  const postStore = usePostStore()
-  const commentContent = ref('')
-  const comments = ref<String[]>([])
-  const props = defineProps(['post'])
-  defineEmits(['toggleOpen'])
+const postStore = usePostStore()
+const commentContent = ref('')
+const comments = ref<String[]>([])
+const props = defineProps(['post'])
+defineEmits(['toggleOpen'])
 
- const handleSendComment = async (postId: number, comment: string) => {
+const handleSendComment = async (postId: number, comment: string) => {
   const data = await postStore.commentAPost(postId, comment)
   // Insertamos el objeto 'comment' que viene directo desde la respuesta de Laravel
   if (data && data.data.comment) {
@@ -43,14 +43,14 @@ import { getCommentsOfPostService } from '@/services/PostService'
   }
   commentContent.value = '' // Limpiamos el input en el frontend
 }
-  const getCommentsOfPost = async (postId: number) => {
-    const {data} = await getCommentsOfPostService(postId)
-    comments.value = data.comments
-  }
+const getCommentsOfPost = async (postId: number) => {
+  const { data } = await getCommentsOfPostService(postId)
+  comments.value = data.comments
+}
 
- onMounted(() => {
+onMounted(() => {
   getCommentsOfPost(props.post.id)
- })
+})
 </script>
 <style lang="">
 

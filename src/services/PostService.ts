@@ -21,15 +21,18 @@ export const createPostService = async (body: string, files: File[]) => {
 export const getRecentPostsService = async () => {
   return await axios.get<PostResponse>('/api/post');
 }
+export const getPostsByUserIdService = async (userId: number) => {
+  return await axios.get<PostResponse>(`/api/get_posts_by_user_id?user_id=${userId}`);
+}
 
 export const reactToPostServie = async (postId: number, type: string) => {
-  return await axios.post(`/api/post/${postId}/react`, {post_id: postId, type})
+  return await axios.post(`/api/post/${postId}/react`, { post_id: postId, type })
 }
 
 export const commentAPostService = async (postId: number, comment: string) => {
-  return await axios.post(`/api/post/${postId}/comment`, {post_id: postId, comment})
+  return await axios.post(`/api/post/${postId}/comment`, { post_id: postId, comment })
 }
 
 export const getCommentsOfPostService = async (postId: number) => {
-  return await axios.post(`/api/post/${postId}/get_comment`, {post_id: postId})
+  return await axios.post(`/api/post/${postId}/get_comment`, { post_id: postId })
 }

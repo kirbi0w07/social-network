@@ -6,6 +6,7 @@ import SignUpView from '@/views/auth/SignUpView.vue'
 import HomeView from '@/views/HomeView.vue'
 import MessagesView from '@/views/MessagesView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import SearchView from '@/views/SearchView.vue'
 import WelcomeView from '@/views/WelcomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -15,34 +16,36 @@ const router = createRouter({
     {
       path: '/',
       component: MainLayout,
-      meta: {requiresAuth: true},
+      meta: { requiresAuth: true },
       children: [
-        {path: '', component: HomeView, name: 'Home'},
-        {path: '/profile', component: ProfileView, name: 'Profile'},
-        {path: '/messages', component: MessagesView},
-        // {path: '/search', component: HomeView},
+        { path: '', component: HomeView, name: 'Home' },
+        { path: '/my-profile', component: ProfileView, name: 'MyProfile' },
+        { path: '/users/:username', component: ProfileView, name: 'Profile' },
+        { path: '/messages', component: MessagesView },
+        { path: '/search', component: SearchView },
       ]
     },
-    {path: '/auth',
+    {
+      path: '/auth',
       component: AuthView,
       children: [
-      {path: '', redirect: '/auth/sign-in'},
-      {path: 'sign-in', component: SignInView, name: 'SignIn'},
-      {path: 'sign-up', component: SignUpView, name: 'SignUp'},
+        { path: '', redirect: '/auth/sign-in' },
+        { path: 'sign-in', component: SignInView, name: 'SignIn' },
+        { path: 'sign-up', component: SignUpView, name: 'SignUp' },
       ]
     },
-    {path: '/welcome', component: WelcomeView},
+    { path: '/welcome', component: WelcomeView },
   ],
 })
 
-router.beforeEach((to, from) => { 
+router.beforeEach((to, from) => {
   const authStore = useAuthStore()
-  if(!authStore.isAuthenticated && to.matched.some(record => record.meta.requiresAuth)) {
-    return {name: 'SignIn'}
+  if (!authStore.isAuthenticated && to.matched.some(record => record.meta.requiresAuth)) {
+    return { name: 'SignIn' }
   }
 
   if (authStore.isAuthenticated && (to.path.startsWith('/auth') || to.name === 'SignIn')) {
-    return {name: 'Home'}
+    return { name: 'Home' }
   }
 
   return true

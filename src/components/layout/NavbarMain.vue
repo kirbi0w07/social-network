@@ -3,7 +3,7 @@
         <router-link to="/">
             <Icon icon="heroicons:home-16-solid" width="24" color="#374151"/>
         </router-link>
-        <router-link to="/profile">
+        <router-link to="/my-profile">
             <Icon icon="heroicons:user-circle-16-solid" width="24" color="#374151"/>
         </router-link>
         <router-link to="/messages">
