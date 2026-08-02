@@ -6,11 +6,14 @@ import { ref } from 'vue'
 export const useNotificationStore = defineStore('notification', () => {
 
   const notifications = ref<Notification[]>([])
-
   const getNotifications = async () => {
     const { data } = await getNotificationsService()
     notifications.value = data.notifications
 
+  }
+
+  const addNotification = (notification: Notification) => {
+    notifications.value.unshift(notification)
   }
 
   const show = ref(false)
@@ -31,6 +34,7 @@ export const useNotificationStore = defineStore('notification', () => {
     }, 3000)
   }
 
+
   return {
     show,
     message,
@@ -38,6 +42,7 @@ export const useNotificationStore = defineStore('notification', () => {
     notifications,
     showAsideNotification,
     notify,
-    getNotifications
+    getNotifications,
+    addNotification,
   }
 })

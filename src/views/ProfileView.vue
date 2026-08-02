@@ -2,7 +2,7 @@
     <main class="bg-white">
         <!-- cover picture -->
         <section class="w-full h-40 bg-slate-300" @click="changeCoverPicture">
-            <img v-show="profileUser?.profile?.cover_picture_url ?? ''" :src="profileUser?.profile.cover_picture_url" :alt="`${profileUser?.profile?.username} Cover`" :title="`${profileUser?.profile?.username} Cover`"
+            <img v-show="profileUser?.profile?.cover_picture_url ?? ''" :src="profileUser?.profile?.cover_picture_url" :alt="`${profileUser?.profile?.username} Cover`" :title="`${profileUser?.profile?.username} Cover`"
             class="w-full h-full object-cover"/>
         </section>
         <section class="relative w-full h-20 bg-white rounded-2xl -mt-5">
@@ -234,11 +234,6 @@ const getUserByUsername = async (username: string) => {
   profileUser.value = data.data.userFinded
   return data.data.userFinded
 }
-
-//friends
-
-//accept friend request
-
 
 const sendFriendRequest = async (userId: string) => {
   const status = await addFriend(userId)

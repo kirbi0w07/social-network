@@ -15,54 +15,66 @@
         <p class="ml-4 text-lg font-semibold cursor-pointer" @click="redirectProfile(user)">{{user.profile.username}}</p>
         </div>
         <!-- Mi perfil -->
-        <button
-          v-if="user.id === userStore.user.id"
-          type="button"
-          class="text-md font-bold px-2 py-1 bg-sky-700 rounded-md text-white cursor-pointer"
-          @click="redirectProfile(user)"
-        >
-          My Profile
-        </button>
+<button
+  v-if="user.id === userStore.user.id"
+  type="button"
+  class="text-md font-bold px-2 py-1 bg-sky-700 rounded-md text-white cursor-pointer"
+  @click="redirectProfile(user)"
+>
+  My Profile
+</button>
 
-        <!-- Sin relación -->
-        <button
-          v-else-if="!user.friendship_status"
-          type="button"
-          class="text-md font-bold px-2 py-1 bg-sky-700 rounded-md text-white hover:bg-sky-800 cursor-pointer"
-          @click="addFriend(user.id)"
-        >
-          Add Friend
-        </button>
+<!-- Sin relación -->
+<button
+  v-else-if="user.friendship_button === 'add'"
+  type="button"
+  class="text-md font-bold px-2 py-1 bg-sky-700 rounded-md text-white hover:bg-sky-800 cursor-pointer"
+  @click="sendFriendRequest(user)"
+>
+  Add Friend
+</button>
 
-        <!-- Solicitud enviada -->
-        <button
-          v-else-if="user.friendship_status === 'pending_sent'"
-          type="button"
-          class="text-md font-bold px-2 py-1 bg-amber-500 rounded-md text-white cursor-default"
-          disabled
-        >
-          Pending
-        </button>
+<!-- Solicitud enviada -->
+<button
+  v-else-if="user.friendship_button === 'pending'"
+  type="button"
+  class="text-md font-bold px-2 py-1 bg-amber-500 rounded-md text-white cursor-default"
+  disabled
+>
+  Pending
+</button>
 
-        <!-- Solicitud recibida -->
-        <button
-          v-else-if="user.friendship_status === 'pending_received'"
-          type="button"
-          class="text-md font-bold px-2 py-1 bg-green-600 rounded-md text-white cursor-pointer"
-          @click="acceptFriend(user.id)"
-        >
-          Accept
-        </button>
+<!-- Solicitud recibida -->
+<div
+  v-else-if="user.friendship_button === 'accept'"
+  class="flex"
+>
+  <button
+    type="button"
+    class="text-md font-bold px-2 py-1 bg-green-600 rounded-md text-white cursor-pointer"
+    @click="acceptFriendRequest(user)"
+  >
+    Accept
+  </button>
 
-        <!-- Ya son amigos -->
-        <button
-          v-else-if="user.friendship_status === 'accepted'"
-          type="button"
-          class="text-md font-bold px-2 py-1 bg-slate-600 rounded-md text-white"
-          @click="redirectProfile(user)"
-        >
-          Friends
-        </button>
+  <button
+    type="button"
+    class="text-md font-bold px-2 py-1 bg-red-600 rounded-md text-white cursor-pointer ml-2"
+    @click="rejectFriendMethod(user)"
+  >
+    Reject
+  </button>
+</div>
+
+<!-- Ya son amigos -->
+<button
+  v-else-if="user.friendship_button === 'friends'"
+  type="button"
+  class="text-md font-bold px-2 py-1 bg-slate-600 rounded-md text-white"
+  @click="redirectProfile(user)"
+>
+  Friends
+</button>
       </article>
     </section>
   </div>
@@ -82,7 +94,7 @@ const usersSearched = ref(null)
 const router = useRouter()
 const route = useRoute()
 const userStore = useAuthStore()
-const { addFriend } = useFriendsStore()
+const { addFriend, acceptFriend, rejectFriend } = useFriendsStore()
 const search = async () => {
   const data = await searchDataService(searchText.value)
   usersSearched.value = data.data.users
@@ -99,6 +111,24 @@ const redirectProfile = (user: User) => {
     //en caso de que sea otro usuario se redirige a users
     router.push(`/users/${user?.profile.username}`)
   }
+}
+
+const sendFriendRequest = async (user: User) => {
+  const status = await addFriend(String(user.id))
+
+  user.friendship_button = status
+}
+
+const acceptFriendRequest = async (user: User) => {
+  const status = await acceptFriend(String(user.id))
+
+  user.friendship_button = status
+}
+
+const rejectFriendMethod = async (user: User) => {
+  const status = await rejectFriend(String(user.id))
+
+  user.friendship_button = status
 }
 
 

@@ -14,7 +14,7 @@ const modules = [Navigation, Pagination];
 const postStore = usePostStore()
 const props = defineProps(['post'])
 
-
+const selectedMediaIndex = ref(0)
 const showCommentSection = ref(false)
 const showPostMedia = ref(false)
 
@@ -29,7 +29,8 @@ const toggleCommentSection = () => {
   showCommentSection.value = !showCommentSection.value
 }
 
-const togglePostMedia = () => {
+const togglePostMedia = (index: number = 0) => {
+  selectedMediaIndex.value = index
   showPostMedia.value = !showPostMedia.value
 }
 
@@ -56,7 +57,7 @@ const togglePostMedia = () => {
       <section>
         <!-- 1 imagen -->
         <div v-if="post?.media?.length === 1" class="py-2">
-          <img :src="post.media[0].file_url" alt="" @click="togglePostMedia"
+          <img :src="post.media[0].file_url" alt="" @click="togglePostMedia()"
             class="w-full max-h-[600px] object-cover rounded-lg cursor-pointer" />
         </div>
 
@@ -64,7 +65,7 @@ const togglePostMedia = () => {
         <!-- 2 imágenes -->
         <div v-else-if="post?.media?.length === 2" class="grid grid-cols-2 gap-1 py-2">
           <div v-for="(media, index) in post.media" :key="media.id" class="relative aspect-square overflow-hidden">
-            <img :src="media.file_url" alt="" @click="togglePostMedia"
+            <img :src="media.file_url" alt="" @click="togglePostMedia(Number(index))"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
           </div>
         </div>
@@ -75,14 +76,14 @@ const togglePostMedia = () => {
 
           <!-- Imagen grande -->
           <div class="row-span-2 relative overflow-hidden">
-            <img :src="post.media[0].file_url" alt="" @click="togglePostMedia"
+            <img :src="post.media[0].file_url" alt="" @click="togglePostMedia()"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
           </div>
 
 
           <!-- Imagen pequeña superior -->
           <div class="relative aspect-square overflow-hidden">
-            <img :src="post.media[1].file_url" alt="" @click="togglePostMedia"
+            <img :src="post.media[1].file_url" alt="" @click="togglePostMedia(1)"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
           </div>
 
@@ -90,11 +91,11 @@ const togglePostMedia = () => {
           <!-- Imagen pequeña inferior + contador -->
           <div class="relative aspect-square overflow-hidden">
 
-            <img :src="post.media[2].file_url" alt="" @click="togglePostMedia"
+            <img :src="post.media[2].file_url" alt="" @click="togglePostMedia(2)"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
 
             <!-- +N -->
-            <div v-if="post.media.length > 3" @click="togglePostMedia"
+            <div v-if="post.media.length > 3" @click="togglePostMedia(2)"
               class="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer rounded-lg">
               <span class="text-white text-3xl font-bold">
                 +{{ post.media.length - 3 }}
@@ -116,7 +117,7 @@ const togglePostMedia = () => {
         <div @click.stop class="relative w-[90%] max-w-4xl px-4 z-[60]">
 
           <swiper :modules="modules" :slides-per-view="1" :space-between="10" navigation
-            :pagination="{ clickable: true }" class="rounded-lg overflow-hidden">
+            :initial-slide="selectedMediaIndex" :pagination="{ clickable: true }" class="rounded-lg overflow-hidden">
 
             <swiper-slide v-for="picture in post.media" :key="picture.id"
               class="flex justify-center items-center bg-black/20 aspect-[4/3]">
