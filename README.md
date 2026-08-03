@@ -8,7 +8,7 @@ El proyecto consume una API REST desarrollada con Laravel y utiliza **Laravel Re
 
 ## 🚀 Tecnologías
 
-* **Vue 3**
+* **Vue JS**
 * **TypeScript**
 * **Vite**
 * **Pinia**
@@ -73,33 +73,6 @@ Las notificaciones obtenidas desde la API se almacenan y muestran en la interfaz
 Mediante Laravel Echo y Laravel Reverb, el frontend permanece suscrito a un canal privado del usuario.
 
 Cuando ocurre un evento, Vue recibe la información inmediatamente sin necesidad de recargar la página.
-
-Por ejemplo:
-
-```text
-Usuario A
-   │
-   │ envía solicitud
-   ▼
-Laravel API
-   │
-   ├── Guarda solicitud
-   ├── Crea notificación
-   └── Emite evento
-          │
-          ▼
-      Laravel Reverb
-          │
-          ▼
-      Usuario B
-          │
-          ▼
-     Vue + Echo
-          │
-          ▼
-  Notificación en tiempo real
-```
-
 ---
 
 ## 🧩 Arquitectura
@@ -151,48 +124,12 @@ Esto permite mantener separada la lógica de comunicación HTTP de los component
 
 ---
 
-## ⚡ Comunicación en tiempo real
-
-La aplicación utiliza:
-
-```text
-Vue
- │
- └── Laravel Echo
-          │
-          ▼
-     Laravel Reverb
-          │
-          ▼
-      Laravel API
-```
-
-El frontend se suscribe a un canal privado asociado al usuario:
-
-```text
-notifications.{userId}
-```
-
-Y escucha eventos específicos, por ejemplo:
-
-```text
-friend.request.created
-friend.request.accepted
-```
-
-Esto permite que diferentes funcionalidades puedan reaccionar a eventos emitidos desde Laravel sin necesidad de realizar polling o recargar la página.
-
----
-
 ## 🔗 Backend
 
 Este frontend trabaja junto con una API desarrollada en Laravel.
 
 **Backend:**
-`https://github.com/TU-USUARIO/social-network-api`
-
-> Reemplaza el enlace anterior por la URL real de tu repositorio.
-
+`https://github.com/kirbi0w07/social-network-api`
 ---
 
 ## ⚙️ Instalación
@@ -200,9 +137,9 @@ Este frontend trabaja junto con una API desarrollada en Laravel.
 Clonar el proyecto:
 
 ```bash
-git clone https://github.com/TU-USUARIO/social-network-frontend.git
+git clone https://github.com/kirbi0w07/social-network
 
-cd social-network-frontend
+cd social-network
 ```
 
 Instalar dependencias:
