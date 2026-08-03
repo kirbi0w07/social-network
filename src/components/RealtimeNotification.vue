@@ -20,7 +20,13 @@ const close = () => {
       class="fixed bottom-5 right-5 z-[9999] w-80 bg-white rounded-xl shadow-xl border border-gray-200 p-4">
 
       <div class="flex items-start gap-3">
-        <UserAvatar :user="user" :alt="user" :title="user" />
+        <div>
+          <UserAvatar :user="notificationStore.realtimeNotification.data.user"
+            :alt="notificationStore.realtimeNotification.data.user"
+            :title="notificationStore.realtimeNotification.data.user" />
+          <p>{{ notificationStore.realtimeNotification.data.user.name }} {{
+            notificationStore.realtimeNotification.data.user.last_name}}</p>
+        </div>
 
         <div class="flex-1">
 
