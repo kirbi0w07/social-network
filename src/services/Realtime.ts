@@ -31,7 +31,7 @@ export const listenForNotifications = () => {
     .private(`notifications.${authStore.user.id}`)
     .listen('.friend.request.created', (event) => {
 
-      console.log('🔥🔥🔥 EVENTO RECIBIDO POR REVERB')
+      console.log('🔥🔥🔥 EVENTO RECIBIDO POR REVERB!')
       console.log(event)
 
       notificationStore.addNotification(event.notification)
