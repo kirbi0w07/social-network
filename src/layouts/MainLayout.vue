@@ -8,13 +8,13 @@
 
     <!-- Notification Alert -->
     <NotifyAlert />
-    <RealTimeNotification/>
+    <RealtimeNotification/>
 
 </template>
 <script lang="ts" setup>
 import NavbarMain from '@/components/layout/NavbarMain.vue';
 import NotifyAlert from '@/components/NotifyAlert.vue';
-import RealTimeNotification from '@/components/RealTimeNotification.vue';
+import RealtimeNotification from '@/components/RealtimeNotification.vue';
 import { listenForNotifications } from '@/services/Realtime';
 import { useNotificationStore } from '@/stores/notifications';
 import { onMounted } from 'vue';
