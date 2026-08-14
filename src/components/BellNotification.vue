@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="relative">
-    <Icon @click="notificationStore.showAsideNotification = true" icon="heroicons:bell" width="24" color="#374151"
-      class="cursor-pointer" />
+  <div class="relative w-fit shrink-0">
+    <Icon @click="notificationStore.showAsideNotification = true" icon="heroicons:bell" :width="iconWidth"
+      color="#374151" class="cursor-pointer" />
 
-    <!-- red alert circle -->
     <div v-if="notificationStore.notifications.length > 0"
-      class="bg-red-500 rounded-full w-3 h-3 absolute top-0 left-0"> {{ notificationStore.notifications.length }}
+      class="absolute -top-1 -right-1 min-w-3 h-3 px-1 flex items-center justify-center bg-red-500 rounded-full text-[8px] text-white">
+      {{ notificationStore.notifications.length }}
     </div>
   </div>
 
@@ -41,7 +41,10 @@ import CloseButton from './CloseButton.vue';
 import UserAvatar from './ui/UserAvatar.vue';
 import dayjs from '@/utils/dayjs'
 import { useRouter } from 'vue-router';
+import { useWindowSize } from '@/components/composables/useWindowSize';
 import type { Notification } from '@/types/notification.ts';
+
+const { iconWidth } = useWindowSize()
 const notificationStore = useNotificationStore()
 const router = useRouter()
 const notificationClick = (notification: Notification) => {

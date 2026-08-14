@@ -1,23 +1,41 @@
 <template lang="">
-    <div class="layout flex flex-col h-screen md:w-[80%] lg:w-3/4 mx-auto">
+    <div
+  class="
+  layout
+  flex
+  flex-col
+  h-screen
+  w-full
+  xl:w-[90%]
+  lg:w-3/4
+  xl:max-w-[1400px]
+  mx-auto
+"
+    >
       <main class="flex-1 relative overflow-y-auto">
         <RouterView/>
       </main>
       <NavbarMain/>
     </div>
 
-    <!-- Notification Alert -->
-    <NotifyAlert />
     <RealtimeNotification/>
+    <AlertNotification />
+
 
 </template>
 <script lang="ts" setup>
 import NavbarMain from '@/components/layout/NavbarMain.vue';
-import NotifyAlert from '@/components/NotifyAlert.vue';
 import RealtimeNotification from '@/components/RealtimeNotification.vue';
 import { listenForNotifications } from '@/services/Realtime';
 import { useNotificationStore } from '@/stores/notifications';
 import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia'
+import { useNotifyAlertStore } from '@/stores/notifyAlert'
+import AlertNotification from '@/components/AlertNotification.vue';
+
+const notifyAlertStore = useNotifyAlertStore()
+
+const { notifications } = storeToRefs(notifyAlertStore)
 
 const notificationStore = useNotificationStore();
 

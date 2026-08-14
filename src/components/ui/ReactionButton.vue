@@ -1,5 +1,5 @@
 <template lang="">
-  <button type="button" @click="openReactionOpts" class="flex items-center gap-1">
+  <button type="button" @click="openReactionOpts" class="flex flex-1 justify-center items-center gap-1 cursor-pointer">
          <Icon
             :icon="post.user_reaction
               ? REACTION_TYPES[post.user_reaction.type as ReactionType].icon_fill
@@ -26,33 +26,33 @@ import { nextTick, ref } from 'vue';
 
 const props = defineProps({
   post: { type: Object, required: true },
-  withDislike: {type: Boolean},
-  positionRight: {type: String}
+  withDislike: { type: Boolean },
+  positionRight: { type: String }
 });
 
 const emit = defineEmits(['react']);
 
 const reactionMenu = ref<HTMLElement | null>(null);
- const REACTION_TYPES = {
-  like: {icon: 'heroicons:hand-thumb-up', icon_fill: 'heroicons:hand-thumb-up-solid', label: 'Like'},
-  love: {icon: 'heroicons:heart', icon_fill: 'heroicons:heart-solid', label: 'Love'},
-  smile: {icon: 'heroicons:face-smile', icon_fill: 'heroicons:face-smile-solid', label: 'Smile'},
-  fire: {icon: 'heroicons:fire', icon_fill: 'heroicons:fire-solid', label: 'Fire'},
- } as const
+const REACTION_TYPES = {
+  like: { icon: 'heroicons:hand-thumb-up', icon_fill: 'heroicons:hand-thumb-up-solid', label: 'Like' },
+  love: { icon: 'heroicons:heart', icon_fill: 'heroicons:heart-solid', label: 'Love' },
+  smile: { icon: 'heroicons:face-smile', icon_fill: 'heroicons:face-smile-solid', label: 'Smile' },
+  fire: { icon: 'heroicons:fire', icon_fill: 'heroicons:fire-solid', label: 'Fire' },
+} as const
 
-  type ReactionType = keyof typeof REACTION_TYPES;
-  const showReactionOpts = ref(false)
+type ReactionType = keyof typeof REACTION_TYPES;
+const showReactionOpts = ref(false)
 
 const openReactionOpts = async () => {
-    showReactionOpts.value = !showReactionOpts.value
-    if (showReactionOpts.value) {
+  showReactionOpts.value = !showReactionOpts.value
+  if (showReactionOpts.value) {
     // Esperamos al siguiente tick para que el div exista en el DOM
     await nextTick();
     reactionMenu.value?.focus();
   }
-  }
+}
 
-  const handleReactionClick = (type: ReactionType) => {
+const handleReactionClick = (type: ReactionType) => {
   showReactionOpts.value = false;
   emit('react', type); // <-- Enviamos el tipo (ej. 'love') hacia arriba
 };

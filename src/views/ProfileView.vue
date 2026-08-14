@@ -155,6 +155,8 @@ import { usePostStore } from '@/stores/post';
 import { acceptFriendRequestService } from '@/services/FriendService';
 import { useNotificationStore } from '@/stores/notifications';
 import { useFriendsStore } from '@/stores/friends';
+import { useNotifyAlertStore } from '@/stores/notifyAlert';
+import { useLoadingStore } from '@/stores/loading';
 const route = useRoute()
 const isMyProfile = computed(() => route.params.username ? false : true)
 
@@ -164,6 +166,8 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const authStore = useAuthStore()
 const postStore = usePostStore()
 const notificationStore = useNotificationStore()
+const notifyAlertStore = useNotifyAlertStore()
+const loadingStore = useLoadingStore()
 const { addFriend, acceptFriend, rejectFriend } = useFriendsStore()
 const profileUser = ref<User | null>(null)
 const { uploadProfilePicture, uploadCoverPicture } = useProfileStore()
@@ -214,18 +218,26 @@ const handleFileChange = async (event: Event) => {
 
 
 const uploadFilePicture = async (file: File) => {
-  if (
-    imageType.value ===
-    'avatar'
-  ) {
-    await uploadProfilePicture(
-      file
-    )
+  try {
+    loadingStore.show('Uploading...')
+    if (
+      imageType.value ===
+      'avatar'
+    ) {
+      await uploadProfilePicture(
+        file
+      )
+    }
+    else {
+      await uploadCoverPicture(
+        file
+      )
+    }
+  } catch (error) {
+    console.error("Error uploading picture:", error)
   }
-  else {
-    await uploadCoverPicture(
-      file
-    )
+  finally {
+    loadingStore.hide()
   }
 }
 

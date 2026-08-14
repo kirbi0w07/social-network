@@ -1,53 +1,36 @@
 <template>
-  <nav class="w-full flex justify-between mb-1 bg-white">
+  <nav class="w-full flex justify-between mb-1 bg-white md:p-2">
+
     <div class="flex gap-2 pl-2 py-2 items-center">
-      <Icon icon="heroicons:bars-3" width="24" color="#374151" @click="toggleSidebar" />
-      <!-- 374151, b2b2b2 -->
-      <h1 class="">Social Network</h1>
-    </div>
-    <div class="flex items-center gap-2 pr-2 py-2">
-      <Icon icon="heroicons:plus-small" width="24" color="#374151" />
 
-      <BellNotification />
+      <Icon icon="heroicons:bars-3" :width="iconWidth" color="#374151" class="cursor-pointer md:hidden"
+        @click="emit('toggle-sidebar')" />
 
-      <!-- <Icon icon="heroicons:chat-bubble-oval-left-ellipsis" width="24" color="#374151" /> -->
+      <h1 class="md:text-xl">
+        Social Network
+      </h1>
+
     </div>
+
+    <div class="flex items-center gap-2 pr-2 py-2 md:hidden">
+
+      <!-- <Icon icon="heroicons:plus-small" :width="iconWidth" color="#374151" /> -->
+
+      <BellNotification v-if="windowWidth < 768" />
+
+    </div>
+
   </nav>
-  <transition name="aside">
-    <sidebarHome v-if="showSidebar" @close="toggleSidebar" />
-  </transition>
 </template>
+
 <script lang="ts" setup>
 import { Icon } from '@iconify/vue'
-import SidebarHome from '@/components/layout/SidebarHome.vue'
-import { ref } from 'vue'
 import BellNotification from '../BellNotification.vue'
+import { useWindowSize } from '../composables/useWindowSize'
 
-const showSidebar = ref(false)
-const toggleSidebar = () => {
-  showSidebar.value = !showSidebar.value
-}
+const { iconWidth, windowWidth } = useWindowSize()
+
+const emit = defineEmits<{
+  'toggle-sidebar': []
+}>()
 </script>
-<style scoped>
-.aside-enter-active,
-.aside-leave-active {
-  transition:
-    transform 0.3s ease,
-    opacity 0.3s ease;
-}
-
-.aside-enter-from {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-
-.aside-enter-to {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.aside-leave-to {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-</style>

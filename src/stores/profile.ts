@@ -4,10 +4,11 @@ import { ref, computed } from "vue"
 import type { Profile } from "@/types/profile"
 import axios from "@/lib/axios"
 import { uploadCoverPictureService, uploadProfilePictureService } from "@/services/ProfileService"
+import { useNotifyAlertStore } from "./notifyAlert"
 
 export const useProfileStore = defineStore('profile', () => {
   const authStore = useAuthStore()
-
+  const notifyAlertStore = useNotifyAlertStore()
 
   const uploadProfilePicture = async (file: File) => {
     try {
@@ -17,6 +18,7 @@ export const useProfileStore = defineStore('profile', () => {
       }
     } catch (error) {
       console.error("Error al subir la foto de perfil", error);
+      notifyAlertStore.addNotification("error", error?.response?.data?.message || "Error al subir la foto de perfil");
     }
   }
   const uploadCoverPicture = async (file: File) => {
@@ -27,6 +29,8 @@ export const useProfileStore = defineStore('profile', () => {
       }
     } catch (error) {
       console.error("Error al subir la foto de perfil", error);
+      notifyAlertStore.addNotification("error", error?.response?.data?.message || "Error al subir la foto de perfil");
+      throw error
     }
   }
 

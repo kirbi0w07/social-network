@@ -1,7 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import NotifyAlert from './components/NotifyAlert.vue';
+import LoadingAnimation from './components/ui/LoadingAnimation.vue';
+</script>
 
 <template>
-  <RouterView/>
+  <LoadingAnimation />
+  <NotifyAlert />
+  <RouterView />
 </template>
 
 <style scoped></style>

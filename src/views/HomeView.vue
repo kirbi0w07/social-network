@@ -1,34 +1,101 @@
 <template>
-  <div class="flex flex-col items-stretch pb-8">
-    <!-- <section class="flex justify-between bg-white min-w-11/12 mb-6 py-2 px-6 shadow shadow-slate-200 rounded-2xl">
-            <span class="text-slate-400">Search...</span>
-            <Icon icon="heroicons:magnifying-glass" width="24" color="#b2b2b2" />
-        </section> -->
-    <!-- Section nav -->
-    <NavbarHome />
+  <div class="w-full min-h-screen">
 
-    <!-- Section what's on your mind -->
-    <WhatsInMind />
+    <!-- DESKTOP: sidebar + contenido -->
+    <div class="hidden md:flex w-full min-h-screen">
 
-    <!-- history Section -->
-    <AddHistory />
+      <!-- SIDEBAR -->
+      <div class="md:w-[220px] xl:w-[280px]  shrink-0">
+        <SidebarHome />
+      </div>
 
-    <!-- Posts Section -->
-    <PostSection :posts="postStore.recentPosts" :show-creating="true" />
+      <!-- CONTENIDO -->
+      <div class="flex-1 min-w-0">
+
+        <NavbarHome />
+
+        <div class="flex flex-col items-stretch pb-8">
+          <WhatsInMind />
+
+          <!--   -->
+
+          <PostSection :posts="postStore.recentPosts" :show-creating="true" />
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- MOBILE / MD -->
+    <div class="md:hidden">
+
+      <!-- NAV -->
+      <NavbarHome @toggle-sidebar="toggleSidebar" />
+
+      <!-- SIDEBAR MOBILE -->
+      <transition name="aside">
+        <SidebarHome v-if="showSidebar" @close="toggleSidebar" />
+      </transition>
+
+      <!-- CONTENIDO -->
+      <div class="flex flex-col items-stretch pb-8">
+
+        <WhatsInMind />
+
+        <AddHistory />
+
+        <PostSection :posts="postStore.recentPosts" :show-creating="true" />
+
+      </div>
+
+    </div>
+
   </div>
 </template>
+
 <script lang="ts" setup>
 import NavbarHome from '@/components/layout/NavbarHome.vue'
 import WhatsInMind from '@/components/home/WhatsInMind.vue'
 import AddHistory from '@/components/home/AddHistory.vue'
+import PostSection from '@/components/PostSection.vue'
+import SidebarHome from '@/components/layout/SidebarHome.vue'
+
 import { onMounted, ref } from 'vue'
 import { usePostStore } from '@/stores/post'
-import type { Post } from '@/types/post'
-import PostSection from '@/components/PostSection.vue'
+
+const showSidebar = ref(false)
+
+const toggleSidebar = () => {
+  showSidebar.value = !showSidebar.value
+}
+
 const postStore = usePostStore()
+
 onMounted(async () => {
   const { data } = await postStore.getRecentPosts()
+
   postStore.recentPosts = data.posts
 })
+
 </script>
-<style lang=""></style>
+
+<style scoped>
+.aside-enter-active,
+.aside-leave-active {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.aside-enter-from,
+.aside-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.aside-enter-to,
+.aside-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+</style>

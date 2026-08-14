@@ -10,6 +10,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import dayjs from '@/utils/dayjs'
+import { useWindowSize } from './composables/useWindowSize.ts';
+
+const { iconWidth } = useWindowSize()
 const modules = [Navigation, Pagination];
 const postStore = usePostStore()
 const props = defineProps(['post'])
@@ -40,19 +44,20 @@ const togglePostMedia = (index: number = 0) => {
   <article class="w-full">
     <header class="flex justify-between p-2 text-slate-900">
       <div class="flex items-center gap-1">
-        <UserAvatar :user="post.user" :alt="post.user" :title="post.user" />
+        <UserAvatar :user="post.user"
+          customClass="w-7 h-7 rounded-full object-cover bg-slate-300 border border-slate-50 md:w-12 md:h-12" />
         <div class="flex flex-col">
-          <p class="font-medium text-sm">{{ post.user.name }} {{ post.user.last_name }}</p>
-          <p class="text-xs text-slate-700">1h</p>
+          <p class="font-medium text-sm md:text-lg">{{ post.user.name }} {{ post.user.last_name }}</p>
+          <p class="text-xs text-slate-700 md:text-sm">{{ dayjs(post.created_at).fromNow() }}</p>
         </div>
       </div>
       <div class="flex gap-4">
-        <Icon icon="heroicons:ellipsis-horizontal" width="24" color="#374151" />
-        <Icon icon="heroicons:x-mark-solid" width="24" color="#374151" />
+        <Icon icon="heroicons:ellipsis-horizontal" :width="iconWidth" color="#374151" />
+        <Icon icon="heroicons:x-mark-solid" :width="iconWidth" color="#374151" />
       </div>
     </header>
     <div class="px-2">
-      <p>{{ post.body }}</p>
+      <p class="md:text-2xl">{{ post.body }}</p>
 
       <section>
         <!-- 1 imagen -->
@@ -133,18 +138,18 @@ const togglePostMedia = (index: number = 0) => {
     </section>
 
     <footer class="flex py-4">
-      <div class="flex flex-1 justify-around gap-2">
-        <div class="relative">
+      <div class="flex w-full">
+
+        <div class="flex-1 flex justify-center">
           <ReactionButton :post="props.post" @react="(type) => reactToPost(post.id, type)" />
         </div>
-        <button class="flex items-center gap-1" @click="toggleCommentSection">
-          <Icon icon="heroicons:chat-bubble-bottom-center-text" width="24" color="#374151" />
+
+        <button class="flex-1 flex items-center justify-center gap-1 cursor-pointer" @click="toggleCommentSection">
+          <Icon icon="heroicons:chat-bubble-bottom-center-text" :width="iconWidth" color="#374151" />
           <span>{{ post.comments_count }}</span>
         </button>
-        <button class="flex items-center gap-1">
-          <Icon icon="heroicons:arrow-top-right-on-square-solid" width="24" color="#374151" />
-          <span>123</span>
-        </button>
+
+
       </div>
     </footer>
   </article>

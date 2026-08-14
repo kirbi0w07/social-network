@@ -5,10 +5,10 @@ import SidebarListMenuItem from '@/components/sidebar/SidebarListMenuItem.vue'
 
 <template>
   <section class="border-t border-gray-400 pt-4">
-    <ul class="border border-neutral-800 divide-y divide-neutral-800 overflow-hidden">
-      <SidebarListMenuItem icon="heroicons:user-group-16-solid" name="Groups" />
-      <SidebarListMenuItem icon="heroicons:user-group-16-solid" name="Groups" />
-      <SidebarListMenuItem icon="heroicons:user-group-16-solid" name="Groups" />
+    <ul class="overflow-hidden cursor-pointer">
+      <SidebarListMenuItem icon="heroicons:user-16-solid" name="My profile" to="/my-profile" />
+      <SidebarListMenuItem icon="heroicons:users-16-solid" name="Seek friends" to="/search" />
+      <SidebarListMenuItem icon="heroicons:cog-16-solid" name="Settings" to="/settings" />
     </ul>
   </section>
 </template>
