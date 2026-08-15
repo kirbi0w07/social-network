@@ -1,57 +1,66 @@
-<template lang="">
-    <div
-  class="
-  layout
-  flex
-  flex-col
-  h-screen
-  w-full
-  xl:w-[90%]
-  lg:w-3/4
-  xl:max-w-[1400px]
-  mx-auto
-"
-    >
-      <main class="flex flex-1 relative overflow-y-auto">
-        <!-- SIDEBAR -->
-      <div class="md:w-[220px] xl:w-[280px]  shrink-0">
-        <SidebarHome />
-      </div>
-        <RouterView/>
-      </main>
-      <NavbarMain/>
-    </div>
+<template>
+  <div class="
+      layout
+      flex
+      flex-col
+      h-screen
+      w-full
+      xl:w-[90%]
+      lg:w-3/4
+      xl:max-w-[1400px]
+      mx-auto
+    ">
 
-    <RealtimeNotification/>
-    <AlertNotification />
+    <!-- NAVBAR SUPERIOR -->
+    <NavbarHome @toggle-sidebar="showSidebar = !showSidebar" />
 
+    <!-- SIDEBAR + CONTENIDO -->
+    <main class="flex flex-1 min-h-0">
 
+      <!-- SIDEBAR -->
+      <SidebarHome v-if="windowWidth >= 768 || showSidebar" @close="showSidebar = false" />
+
+      <!-- CONTENIDO DE LAS RUTAS -->
+      <section class="flex-1 min-w-0 overflow-y-auto">
+        <RouterView />
+      </section>
+
+    </main>
+
+    <!-- NAVBAR INFERIOR MOBILE -->
+    <NavbarMain />
+
+  </div>
+
+  <RealtimeNotification />
+  <AlertNotification />
 </template>
+
 <script lang="ts" setup>
-import NavbarMain from '@/components/layout/NavbarMain.vue';
-import RealtimeNotification from '@/components/RealtimeNotification.vue';
-import { listenForNotifications } from '@/services/Realtime';
-import { useNotificationStore } from '@/stores/notifications';
-import { onMounted } from 'vue';
-import { storeToRefs } from 'pinia'
-import { useNotifyAlertStore } from '@/stores/notifyAlert'
-import AlertNotification from '@/components/AlertNotification.vue';
-import SidebarHome from '@/components/layout/SidebarHome.vue';
+import { onMounted, ref } from 'vue'
 
+import NavbarHome from '@/components/layout/NavbarHome.vue'
+import NavbarMain from '@/components/layout/NavbarMain.vue'
+import SidebarHome from '@/components/layout/SidebarHome.vue'
 
-const notifyAlertStore = useNotifyAlertStore()
+import RealtimeNotification from '@/components/RealtimeNotification.vue'
+import AlertNotification from '@/components/AlertNotification.vue'
 
-const { notifications } = storeToRefs(notifyAlertStore)
+import { useNotificationStore } from '@/stores/notifications'
+import { listenForNotifications } from '@/services/Realtime'
 
-const notificationStore = useNotificationStore();
+import { useWindowSize } from '@/components/composables/useWindowSize'
+
+const { windowWidth } = useWindowSize()
+
+const showSidebar = ref(false)
+
+const notificationStore = useNotificationStore()
 
 onMounted(() => {
-  notificationStore.getNotifications();
-  listenForNotifications();
-
-
-});
+  notificationStore.getNotifications()
+  listenForNotifications()
+})
 </script>
-<style lang="">
 
-</style>
+<style scoped></style>

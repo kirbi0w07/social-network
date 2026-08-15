@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue'
 import UserAvatar from '../ui/UserAvatar.vue';
 import { useAuthStore } from '@/stores/auth';
 
