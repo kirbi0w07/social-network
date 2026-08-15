@@ -41,7 +41,7 @@ const togglePostMedia = (index: number = 0) => {
 </script>
 
 <template>
-  <article class="w-full">
+  <article class="w-full xl:max-w-2xl">
     <header class="flex justify-between p-2 text-slate-900">
       <div class="flex items-center gap-1">
         <UserAvatar :user="post.user"
@@ -76,39 +76,42 @@ const togglePostMedia = (index: number = 0) => {
         </div>
 
 
-        <!-- 3 o más imágenes -->
-        <div v-else-if="post?.media?.length >= 3" class="grid grid-cols-2 gap-1 py-2">
-
-          <!-- Imagen grande -->
-          <div class="row-span-2 relative overflow-hidden">
-            <img :src="post.media[0].file_url" alt="" @click="togglePostMedia()"
+        <!-- 3 imágenes -->
+        <div v-else-if="post?.media?.length === 3" class="grid grid-cols-2 gap-1 py-2">
+          <!-- Imagen 1 -->
+          <div class="relative aspect-square overflow-hidden">
+            <img :src="post.media[0].file_url" alt="" @click="togglePostMedia(0)"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
           </div>
 
-
-          <!-- Imagen pequeña superior -->
+          <!-- Imagen 2 -->
           <div class="relative aspect-square overflow-hidden">
             <img :src="post.media[1].file_url" alt="" @click="togglePostMedia(1)"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
           </div>
 
-
-          <!-- Imagen pequeña inferior + contador -->
+          <!-- Imagen 3 -->
           <div class="relative aspect-square overflow-hidden">
-
             <img :src="post.media[2].file_url" alt="" @click="togglePostMedia(2)"
               class="w-full h-full object-cover rounded-lg cursor-pointer" />
+          </div>
+        </div>
 
-            <!-- +N -->
-            <div v-if="post.media.length > 3" @click="togglePostMedia(2)"
+        <!-- 4 o más imágenes -->
+        <div v-else-if="post?.media?.length >= 4" class="grid grid-cols-2 gap-1 py-2">
+          <div v-for="(media, index) in post.media.slice(0, 4)" :key="media.id"
+            class="relative aspect-square overflow-hidden">
+            <img :src="media.file_url" alt="" @click="togglePostMedia(Number(index))"
+              class="w-full h-full object-cover rounded-lg cursor-pointer" />
+
+            <!-- Contador sobre la cuarta imagen -->
+            <div v-if="index === 3 && post.media.length > 4" @click="togglePostMedia(3)"
               class="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer rounded-lg">
-              <span class="text-white text-3xl font-bold">
-                +{{ post.media.length - 3 }}
+              <span class="text-white text-3xl font-bold ">
+                +{{ post.media.length - 4 }}
               </span>
             </div>
-
           </div>
-
         </div>
       </section>
     </div>

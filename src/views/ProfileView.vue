@@ -1,5 +1,5 @@
 <template lang="">
-    <main class="bg-white">
+    <main class="bg-white w-full min-h-screen">
         <!-- cover picture -->
         <section class="w-full h-40 bg-slate-300" @click="changeCoverPicture">
             <img v-show="profileUser?.profile?.cover_picture_url ?? ''" :src="profileUser?.profile?.cover_picture_url" :alt="`${profileUser?.profile?.username} Cover`" :title="`${profileUser?.profile?.username} Cover`"

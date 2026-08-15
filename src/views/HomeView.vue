@@ -4,11 +4,6 @@
     <!-- DESKTOP: sidebar + contenido -->
     <div class="hidden md:flex w-full min-h-screen">
 
-      <!-- SIDEBAR -->
-      <div class="md:w-[220px] xl:w-[280px]  shrink-0">
-        <SidebarHome />
-      </div>
-
       <!-- CONTENIDO -->
       <div class="flex-1 min-w-0">
 

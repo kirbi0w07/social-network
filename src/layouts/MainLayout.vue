@@ -12,7 +12,11 @@
   mx-auto
 "
     >
-      <main class="flex-1 relative overflow-y-auto">
+      <main class="flex flex-1 relative overflow-y-auto">
+        <!-- SIDEBAR -->
+      <div class="md:w-[220px] xl:w-[280px]  shrink-0">
+        <SidebarHome />
+      </div>
         <RouterView/>
       </main>
       <NavbarMain/>
@@ -32,6 +36,8 @@ import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useNotifyAlertStore } from '@/stores/notifyAlert'
 import AlertNotification from '@/components/AlertNotification.vue';
+import SidebarHome from '@/components/layout/SidebarHome.vue';
+
 
 const notifyAlertStore = useNotifyAlertStore()
 

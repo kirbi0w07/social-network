@@ -1,5 +1,6 @@
 <template lang="">
-    <section class="p-4 bg-white">
+    <div class="w-full">
+      <section class="p-4 bg-white">
         <h2 class="text-2xl font-bold">Chats</h2>
     </section>
 
@@ -22,6 +23,7 @@
         </ul>
 
     </section>
+    </div>
 </template>
 <script setup lang="ts">
 import { useMessageStore } from '@/stores/message';
