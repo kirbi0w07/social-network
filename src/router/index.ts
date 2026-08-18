@@ -1,6 +1,7 @@
 import MainLayout from '@/layouts/MainLayout.vue'
 import { useAuthStore } from '@/stores/auth'
 import AuthView from '@/views/auth/AuthView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 import SignInView from '@/views/auth/SignInView.vue'
 import SignUpView from '@/views/auth/SignUpView.vue'
 import HomeView from '@/views/HomeView.vue'
@@ -23,6 +24,7 @@ const router = createRouter({
         { path: '/users/:username', component: ProfileView, name: 'Profile' },
         { path: '/messages', component: MessagesView },
         { path: '/search', component: SearchView },
+        { path: '/settings', component: SettingsView },
       ]
     },
     {

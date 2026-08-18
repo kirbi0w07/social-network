@@ -10,7 +10,8 @@
     </div>
 
     <div class="flex justify-center items-center">
-      <Icon icon="heroicons:photo" :width="iconWidth" color="#374151" />
+      <Icon @click="toggleWhatsOnMindForm" icon="heroicons:photo" :width="iconWidth" color="#374151"
+        class="cursor-pointer" />
     </div>
   </article>
 
@@ -20,7 +21,7 @@
         style="grid-template-rows: auto auto minmax(0, 1fr) auto auto;">
         <div class="grid gap-2 grid-cols-3 items-center justify-between px-2 pt-4 pb-1 border-b border-slate-300">
           <Icon icon="heroicons:x-mark-20-solid" :width="iconWidth" color="#374151" @click="toggleWhatsOnMindForm"
-            :class="hideHeader ? 'opacity-0' : ''" />
+            :class="hideHeader ? 'opacity-0' : 'cursor-pointer'" />
 
           <p class="text-sm font-medium justify-self-center md:text-2xl">
             {{ hideHeader ? 'Add text' : 'New Post' }}
@@ -29,7 +30,7 @@
           <Icon v-if="!hideHeader" icon="heroicons:ellipsis-horizontal" :width="iconWidth" color="#374151"
             class="justify-self-end" />
 
-          <button v-else type="button" @click="hideHeader = false" class="justify-self-end">
+          <button v-else type="button" @click="hideHeader = false" class="justify-self-end cursor-pointer md:pr-4">
             Done
           </button>
         </div>
@@ -76,7 +77,7 @@
 
         <ul class="p-4 border-t border-b border-slate-300 bg-white">
           <li v-if="!selectedMedia.length" @click="triggerFileSelect"
-            class="flex flex-col justify-center items-center shadow shadow-slate-300 rounded-lg w-fit px-4 py-2">
+            class="flex flex-col justify-center items-center shadow shadow-slate-300 rounded-lg w-fit px-4 py-2 cursor-pointer">
             <Icon icon="heroicons:photo" :width="iconWidth" color="#0f172b" />
 
             <p class="text-[12px] text-slate-900">
@@ -92,7 +93,7 @@
           </ul>
 
           <button type="button" @click="post"
-            class="px-4 py-1 bg-blue-500 text-white rounded disabled:bg-slate-400 disabled:text-slate-900 md:text-2xl md:px-4 md:py-2">
+            class="px-4 py-1 mr-4 bg-blue-500 text-white rounded disabled:bg-slate-400 disabled:text-slate-900 md:text-2xl md:px-4 md:py-2 cursor-pointer">
             Post
           </button>
         </div>

@@ -5,7 +5,7 @@
 
       <WhatsInMind />
 
-      <AddHistory />
+      <!-- <AddHistory /> -->
 
       <PostSection :posts="postStore.recentPosts" :show-creating="true" />
 
