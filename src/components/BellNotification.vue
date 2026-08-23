@@ -12,8 +12,11 @@
   <!-- notification aside -->
   <aside>
     <transition name="aside">
-      <div v-if="notificationStore.showAsideNotification"
-        class="fixed top-0 right-0 w-screen h-screen bg-white shadow-lg z-50 py-4 overflow-y-auto">
+      <div v-if="notificationStore.showAsideNotification" class="fixed top-0 left-0 right-0 h-screen bg-white shadow-lg z-50 py-4 overflow-y-auto  w-full
+      xl:w-[90%]
+      lg:w-3/4
+      xl:max-w-[1400px]
+      mx-auto">
         <CloseButton @click="notificationStore.showAsideNotification = false" />
         <h2 class="text-lg font-semibold mb-4">Notifications</h2>
         <ul>

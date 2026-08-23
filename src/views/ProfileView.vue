@@ -99,7 +99,7 @@
     />
 
     <!-- modal view picture -->
-      <section v-if="showPictureModal" class="absolute top-0 left-0 w-full h-screen bg-slate-900/50 z-50">
+      <section v-if="showPictureModal" class="absolute top-0 left-0 w-full h-screen bg-slate-900/50 z-[99]">
           <div @click="showPictureModal = false"  class="w-full h-full flex justify-center items-center">
               <div @click.stop class="relative w-full max-w-4xl px-4 z-[60]">
                   <swiper
@@ -157,6 +157,7 @@ import { useNotificationStore } from '@/stores/notifications';
 import { useFriendsStore } from '@/stores/friends';
 import { useNotifyAlertStore } from '@/stores/notifyAlert';
 import { useLoadingStore } from '@/stores/loading';
+import PostSection from '@/components/PostSection.vue';
 const route = useRoute()
 const isMyProfile = computed(() => route.params.username ? false : true)
 
