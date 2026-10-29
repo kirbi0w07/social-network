@@ -18,7 +18,7 @@
     <main class="flex flex-1 min-h-0">
 
       <!-- SIDEBAR -->
-      <SidebarHome v-if="windowWidth >= 768 || showSidebar" @close="showSidebar = false" />
+      <SidebarHome v-if="windowWidth >= 768 && user || showSidebar" @close="showSidebar = false" && user />
 
       <!-- CONTENIDO DE LAS RUTAS -->
       <section class="flex-1 min-w-0 overflow-y-auto">
@@ -50,6 +50,9 @@ import { useNotificationStore } from '@/stores/notifications'
 import { listenForNotifications } from '@/services/Realtime'
 
 import { useWindowSize } from '@/components/composables/useWindowSize'
+import { useAuthStore } from '@/stores/auth'
+
+const { user } = useAuthStore()
 
 const { windowWidth } = useWindowSize()
 
