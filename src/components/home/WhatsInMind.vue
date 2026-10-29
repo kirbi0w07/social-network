@@ -1,5 +1,5 @@
 <template>
-  <article class="flex gap-2 items-center bg-white w-full pl-2 pr-2 pt-3 pb-4">
+  <article v-if="user" class="flex gap-2 items-center bg-white w-full pl-2 pr-2 pt-3 pb-4">
     <UserAvatar :user="user"
       customClass="w-7 h-7 rounded-full object-cover bg-slate-300 border border-slate-50 md:w-12 md:h-12" goProfile />
 
@@ -13,6 +13,15 @@
       <Icon @click="toggleWhatsOnMindForm" icon="heroicons:photo" :width="iconWidth" color="#374151"
         class="cursor-pointer" />
     </div>
+  </article>
+
+  <article v-else @click="goLogin" class="flex gap-2 items-center bg-white w-full pl-2 pr-2 pt-3 pb-4">
+    <div class="flex flex-1 py-1 text-slate-900 rounded-2xl border border-slate-200">
+      <p class="px-4 md:py-2 md:text-xl">
+        Please log in to post
+      </p>
+    </div>
+
   </article>
 
   <Teleport to="body">
@@ -114,7 +123,9 @@ import { createPostService } from '@/services/PostService'
 import { usePostStore } from '@/stores/post'
 import { useWindowSize } from '../composables/useWindowSize.ts'
 import { useNotifyAlertStore } from '@/stores/notifyAlert.ts'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { user } = useAuthStore()
 const postStore = usePostStore()
 const postContent = ref('')
@@ -230,6 +241,12 @@ const post = async () => {
     postStore.isCreatingPost = false
 
   }
+
+
+}
+
+const goLogin = () => {
+  router.push({ name: 'SignIn' })
 }
 </script>
 

@@ -3,8 +3,10 @@
 
     <div class="flex gap-2 pl-2 py-2 items-center">
 
-      <Icon icon="heroicons:bars-3" :width="iconWidth" color="#374151" class="cursor-pointer md:hidden"
+      <Icon v-if="user" icon="heroicons:bars-3" :width="iconWidth" color="#374151" class="cursor-pointer md:hidden"
         @click="emit('toggle-sidebar')" />
+      <Icon v-else icon="heroicons:bars-3" :width="iconWidth" color="#374151" class="cursor-pointer md:hidden"
+        @click="goLogin" />
 
       <h1 class="md:text-xl">
         Social Network
@@ -27,10 +29,18 @@
 import { Icon } from '@iconify/vue'
 import BellNotification from '../BellNotification.vue'
 import { useWindowSize } from '../composables/useWindowSize'
+import { useAuthStore } from '@/stores/auth.ts';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const { iconWidth, windowWidth } = useWindowSize()
+const { user } = useAuthStore()
 
 const emit = defineEmits<{
   'toggle-sidebar': []
 }>()
+
+const goLogin = () => {
+  router.push({ name: 'SignIn' })
+}
 </script>

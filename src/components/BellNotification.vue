@@ -1,7 +1,10 @@
 <template lang="html">
   <div class="relative w-fit shrink-0">
-    <Icon @click="notificationStore.showAsideNotification = true" icon="heroicons:bell" :width="iconWidth"
+    <Icon v-if="user" @click="notificationStore.showAsideNotification = true" icon="heroicons:bell" :width="iconWidth"
       color="#374151" class="cursor-pointer" />
+    <Icon v-else @click="goLogin" icon="heroicons:bell" :width="iconWidth" color="#374151" class="cursor-pointer" />
+
+
 
     <div v-if="notificationStore.notifications.length > 0"
       class="absolute -top-1 -right-1 min-w-3 h-3 px-1 flex items-center justify-center bg-red-500 rounded-full text-[8px] text-white">
@@ -46,9 +49,11 @@ import dayjs from '@/utils/dayjs'
 import { useRouter } from 'vue-router';
 import { useWindowSize } from '@/components/composables/useWindowSize';
 import type { Notification } from '@/types/notification.ts';
+import { useAuthStore } from '@/stores/auth.ts';
 
 const { iconWidth } = useWindowSize()
 const notificationStore = useNotificationStore()
+const { user } = useAuthStore()
 const router = useRouter()
 const notificationClick = (notification: Notification) => {
   //if is type App\Notifications\FriendRequestNotification, redirect to profile of user
@@ -57,6 +62,10 @@ const notificationClick = (notification: Notification) => {
     router.push(`/users/${notification.data.user.profile.username}`)
   }
 };
+
+const goLogin = () => {
+  router.push({ name: 'SignIn' })
+}
 </script>
 
 <style lang="css">
