@@ -11,14 +11,20 @@
   mx-auto
   bg-white
 ">
-    <h1 class='text-center pt-10 font-extrabold text-2xl text-slate-900 md:text-5xl'>My Social Network</h1>
+    <h1 class='text-center pt-10 font-extrabold text-2xl text-slate-900 md:text-5xl cursor-pointer' @click="handleTitleClick">My Social Network</h1>
     <div class='mx-5 mt-10'>
       <router-view></router-view>
     </div>
   </main>
 </template>
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+
+const handleTitleClick = () => {
+  router.push({ name: 'Home' })
+}
 </script>
 <style lang="">
 
